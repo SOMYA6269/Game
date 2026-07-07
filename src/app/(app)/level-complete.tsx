@@ -1,173 +1,111 @@
-import React, { useEffect, useRef } from 'react';
-import {
-  View,
-  Text,
-  Pressable,
-  Animated,
-} from 'react-native';
+import React, { useRef, useEffect } from 'react';
+import { View, Text, Pressable, Animated } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { router, useLocalSearchParams } from 'expo-router';
-import { Star, RotateCcw, Home, ChevronRight } from 'lucide-react-native';
+import { router } from 'expo-router';
+
+function Firework({ x, y, color, delay }: { x: string; y: number; color: string; delay: number }) {
+  const anim = useRef(new Animated.Value(0)).current;
+  useEffect(() => {
+    const loop = Animated.loop(
+      Animated.sequence([
+        Animated.delay(delay),
+        Animated.timing(anim, { toValue: 1, duration: 800, useNativeDriver: true }),
+        Animated.timing(anim, { toValue: 0, duration: 400, useNativeDriver: true }),
+        Animated.delay(1000 + Math.random() * 1000),
+      ])
+    );
+    loop.start();
+    return () => loop.stop();
+  }, [anim, delay]);
+  const scale = anim.interpolate({ inputRange: [0, 0.5, 1], outputRange: [0, 1.8, 0.8] });
+  return (
+    <Animated.View style={{
+      position: 'absolute', left: x as never, top: y,
+      opacity: anim, transform: [{ scale }],
+    }}>
+      <Text style={{ fontSize: 28, color }}>{color === '#F59E0B' ? '🎆' : '🎇'}</Text>
+    </Animated.View>
+  );
+}
 
 export default function LevelCompleteScreen() {
-  const params = useLocalSearchParams<{ score: string; bestScore: string }>();
-  const score = Number(params.score ?? 0);
-  const bestScore = Number(params.bestScore ?? 0);
-  const isNewBest = score >= bestScore;
-
-  const scaleAnim = useRef(new Animated.Value(0.5)).current;
-  const opacityAnim = useRef(new Animated.Value(0)).current;
-  const star1 = useRef(new Animated.Value(0)).current;
-  const star2 = useRef(new Animated.Value(0)).current;
-  const star3 = useRef(new Animated.Value(0)).current;
-
-  const stars = score > 5000 ? 3 : score > 2000 ? 2 : 1;
+  const mainScale = useRef(new Animated.Value(0.3)).current;
+  const starAnims = [useRef(new Animated.Value(0)).current, useRef(new Animated.Value(0)).current, useRef(new Animated.Value(0)).current];
 
   useEffect(() => {
-    Animated.parallel([
-      Animated.spring(scaleAnim, { toValue: 1, useNativeDriver: true, tension: 80, friction: 8 }),
-      Animated.timing(opacityAnim, { toValue: 1, duration: 300, useNativeDriver: true }),
-    ]).start(() => {
-      // Animate stars one by one
-      const starAnims = [star1, star2, star3];
-      starAnims.forEach((anim, i) => {
-        if (i < stars) {
-          setTimeout(() => {
-            Animated.spring(anim, {
-              toValue: 1, useNativeDriver: true, tension: 200, friction: 7,
-            }).start();
-          }, 300 + i * 200);
-        }
-      });
+    Animated.spring(mainScale, { toValue: 1, tension: 50, friction: 5, useNativeDriver: true }).start();
+    starAnims.forEach((a, i) => {
+      Animated.sequence([
+        Animated.delay(400 + i * 200),
+        Animated.spring(a, { toValue: 1, tension: 80, friction: 4, useNativeDriver: true }),
+      ]).start();
     });
   }, []);
 
-  const handleReplay = () => {
-    router.replace('/(app)/game' as never);
-  };
-
-  const handleHome = () => {
-    router.replace('/(app)/home' as never);
-  };
-
   return (
-    <View style={{ flex: 1, backgroundColor: 'rgba(10,1,24,0.9)' }}>
-      <StatusBar style="light" />
-      <SafeAreaView style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24 }}>
-        <Animated.View
-          style={{
-            width: '100%',
-            backgroundColor: '#1A0A3E',
-            borderRadius: 28, padding: 32,
-            alignItems: 'center',
-            borderWidth: 3, borderColor: '#7C3AED',
-            shadowColor: '#7C3AED',
-            shadowOffset: { width: 0, height: 0 },
-            shadowOpacity: 0.6, shadowRadius: 24,
-            opacity: opacityAnim,
-            transform: [{ scale: scaleAnim }],
-          }}
-        >
-          {/* Trophy */}
-          <Text style={{ fontSize: 72, marginBottom: 8 }}>🏆</Text>
+    <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.7)' }}>
+      <StatusBar style="light" backgroundColor="transparent" />
+      {/* Fireworks */}
+      <Firework x="10%" y={80}  color="#F59E0B" delay={0} />
+      <Firework x="80%" y={60}  color="#EC4899" delay={600} />
+      <Firework x="50%" y={40}  color="#22C55E" delay={1200} />
+      <Firework x="25%" y={150} color="#3B82F6" delay={400} />
+      <Firework x="70%" y={120} color="#8B5CF6" delay={900} />
 
-          <Text style={{ color: '#FBBF24', fontSize: 28, fontWeight: '900', marginBottom: 4 }}>
-            {isNewBest ? 'NEW BEST!' : 'GAME OVER'}
-          </Text>
-          <Text style={{ color: '#C4B5FD', fontSize: 14, marginBottom: 24 }}>
-            {isNewBest ? '🎉 Amazing new high score!' : 'Keep merging, you\'ll do better!'}
-          </Text>
+      <SafeAreaView style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24 }}>
+        <Animated.View style={{
+          backgroundColor: '#fff', borderRadius: 32, padding: 28,
+          alignItems: 'center', width: '100%', maxWidth: 340,
+          transform: [{ scale: mainScale }],
+          shadowColor: '#F59E0B', shadowOffset: { width: 0, height: 8 },
+          shadowOpacity: 0.5, shadowRadius: 20,
+        }}>
+          <Text style={{ fontSize: 64, marginBottom: 8 }}>🎉</Text>
+          <Text style={{ fontSize: 28, fontWeight: '900', color: '#22C55E', marginBottom: 4 }}>Level Complete!</Text>
+          <Text style={{ fontSize: 15, color: '#6B7280', marginBottom: 20 }}>Amazing! You cleared the level!</Text>
 
           {/* Stars */}
           <View style={{ flexDirection: 'row', gap: 12, marginBottom: 24 }}>
-            {[star1, star2, star3].map((anim, i) => (
-              <Animated.View key={i} style={{ transform: [{ scale: anim }] }}>
-                <Star
-                  size={40}
-                  color={i < stars ? '#FBBF24' : '#2D1060'}
-                  fill={i < stars ? '#FBBF24' : 'none'}
-                />
+            {[0,1,2].map(i => (
+              <Animated.View key={i} style={{ transform: [{ scale: starAnims[i] }] }}>
+                <Text style={{ fontSize: 48 }}>⭐</Text>
               </Animated.View>
             ))}
           </View>
 
-          {/* Score */}
+          {/* Stats */}
           <View style={{
-            backgroundColor: '#0F0520', borderRadius: 16,
-            paddingVertical: 16, paddingHorizontal: 32,
-            width: '100%', alignItems: 'center', marginBottom: 8,
+            backgroundColor: '#F9FAFB', borderRadius: 16, padding: 16,
+            width: '100%', gap: 10, marginBottom: 20,
           }}>
-            <Text style={{ color: '#9D7EC9', fontSize: 11, fontWeight: '700', marginBottom: 4, letterSpacing: 1 }}>
-              SCORE
-            </Text>
-            <Text style={{ color: '#fff', fontSize: 36, fontWeight: '900' }}>
-              {score.toLocaleString()}
-            </Text>
+            {[
+              ['🎯 Final Score', '6,842'],
+              ['🪙 Coins Earned', '+300'],
+              ['💎 Gems Earned', '+5'],
+              ['⚡ Best Combo', '×7'],
+            ].map(([label, val]) => (
+              <View key={label} style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Text style={{ color: '#6B7280', fontSize: 14 }}>{label}</Text>
+                <Text style={{ color: '#1E1B4B', fontWeight: '900', fontSize: 15 }}>{val}</Text>
+              </View>
+            ))}
           </View>
 
-          <View style={{
-            backgroundColor: '#0F0520', borderRadius: 12,
-            paddingVertical: 10, paddingHorizontal: 20,
-            width: '100%', alignItems: 'center',
-            flexDirection: 'row', justifyContent: 'center', gap: 8, marginBottom: 28,
+          {/* Buttons */}
+          <Pressable onPress={() => router.replace('/(app)/game' as never)} style={{
+            backgroundColor: '#8B5CF6', borderRadius: 18,
+            paddingVertical: 14, width: '100%', alignItems: 'center', marginBottom: 10,
           }}>
-            <Text style={{ color: '#9D7EC9', fontSize: 12 }}>👑 Best:</Text>
-            <Text style={{ color: '#FBBF24', fontSize: 16, fontWeight: '800' }}>
-              {Math.max(score, bestScore).toLocaleString()}
-            </Text>
-          </View>
-
-          {/* Rewards earned */}
-          <View style={{
-            flexDirection: 'row', gap: 16, marginBottom: 28,
-            backgroundColor: '#0F0520', borderRadius: 14,
-            padding: 14, width: '100%', justifyContent: 'center',
+            <Text style={{ color: '#fff', fontWeight: '900', fontSize: 17 }}>Next Level ➡️</Text>
+          </Pressable>
+          <Pressable onPress={() => router.replace('/(app)/home' as never)} style={{
+            backgroundColor: '#F3F0FF', borderRadius: 16,
+            paddingVertical: 12, width: '100%', alignItems: 'center',
+            borderWidth: 2, borderColor: '#8B5CF6',
           }}>
-            <View style={{ alignItems: 'center' }}>
-              <Text style={{ fontSize: 24 }}>🪙</Text>
-              <Text style={{ color: '#FBBF24', fontWeight: '800', fontSize: 14 }}>+{Math.floor(score / 10)}</Text>
-              <Text style={{ color: '#9D7EC9', fontSize: 10 }}>Coins</Text>
-            </View>
-            <View style={{ width: 1, backgroundColor: '#2D1060' }} />
-            <View style={{ alignItems: 'center' }}>
-              <Text style={{ fontSize: 24 }}>💎</Text>
-              <Text style={{ color: '#60A5FA', fontWeight: '800', fontSize: 14 }}>+{stars * 5}</Text>
-              <Text style={{ color: '#9D7EC9', fontSize: 10 }}>Gems</Text>
-            </View>
-          </View>
-
-          {/* Action buttons */}
-          <View style={{ flexDirection: 'row', gap: 12, width: '100%' }}>
-            <Pressable
-              onPress={handleHome}
-              style={{
-                flex: 1, backgroundColor: '#2D1060',
-                borderRadius: 16, paddingVertical: 14,
-                alignItems: 'center', justifyContent: 'center',
-                flexDirection: 'row', gap: 6,
-              }}
-            >
-              <Home size={18} color="#C084FC" />
-              <Text style={{ color: '#C084FC', fontWeight: '700', fontSize: 14 }}>Home</Text>
-            </Pressable>
-
-            <Pressable
-              onPress={handleReplay}
-              style={{
-                flex: 2, backgroundColor: '#7C3AED',
-                borderRadius: 16, paddingVertical: 14,
-                alignItems: 'center', justifyContent: 'center',
-                flexDirection: 'row', gap: 6,
-                shadowColor: '#7C3AED',
-                shadowOffset: { width: 0, height: 4 },
-                shadowOpacity: 0.6, shadowRadius: 12,
-              }}
-            >
-              <RotateCcw size={18} color="#fff" />
-              <Text style={{ color: '#fff', fontWeight: '900', fontSize: 16 }}>Play Again</Text>
-            </Pressable>
-          </View>
+            <Text style={{ color: '#8B5CF6', fontWeight: '800', fontSize: 15 }}>🏠 Home</Text>
+          </Pressable>
         </Animated.View>
       </SafeAreaView>
     </View>

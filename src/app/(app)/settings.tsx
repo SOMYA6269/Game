@@ -1,172 +1,153 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  Pressable,
-  ScrollView,
-  Switch,
-} from 'react-native';
+import { View, Text, Pressable, ScrollView, Switch } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
-import { ArrowLeft, Volume2, Music, Bell, HelpCircle, Info, ChevronRight } from 'lucide-react-native';
 
-function SettingsRow({
-  icon,
-  label,
-  right,
-  onPress,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  right?: React.ReactNode;
-  onPress?: () => void;
-}) {
+interface ToggleRowProps {
+  emoji: string; label: string; sub?: string;
+  value: boolean; onToggle: (v: boolean) => void;
+  color?: string;
+}
+function ToggleRow({ emoji, label, sub, value, onToggle, color = '#8B5CF6' }: ToggleRowProps) {
   return (
-    <Pressable
-      onPress={onPress}
-      style={{
-        flexDirection: 'row', alignItems: 'center',
-        backgroundColor: '#1A0A3E', borderRadius: 14,
-        padding: 16, marginBottom: 8, gap: 14,
-      }}
-    >
+    <View style={{
+      flexDirection: 'row', alignItems: 'center',
+      backgroundColor: '#fff', borderRadius: 16, padding: 14,
+      marginBottom: 8, gap: 12,
+      borderWidth: 1.5, borderColor: '#EDE9FE',
+    }}>
       <View style={{
-        width: 36, height: 36, borderRadius: 10,
-        backgroundColor: '#2D1060',
-        alignItems: 'center', justifyContent: 'center',
+        width: 44, height: 44, borderRadius: 22,
+        backgroundColor: color + '20', alignItems: 'center', justifyContent: 'center',
       }}>
-        {icon}
+        <Text style={{ fontSize: 22 }}>{emoji}</Text>
       </View>
-      <Text style={{ flex: 1, color: '#E9D5FF', fontWeight: '600', fontSize: 15 }}>{label}</Text>
-      {right ?? <ChevronRight size={18} color="#6B4E9E" />}
+      <View style={{ flex: 1 }}>
+        <Text style={{ fontWeight: '800', color: '#1E1B4B', fontSize: 14 }}>{label}</Text>
+        {sub ? <Text style={{ color: '#9CA3AF', fontSize: 11, marginTop: 1 }}>{sub}</Text> : null}
+      </View>
+      <Switch
+        value={value}
+        onValueChange={onToggle}
+        trackColor={{ false: '#E5E7EB', true: color }}
+        thumbColor="#fff"
+      />
+    </View>
+  );
+}
+
+interface NavRowProps { emoji: string; label: string; sub?: string; onPress: () => void; color?: string; }
+function NavRow({ emoji, label, sub, onPress, color = '#8B5CF6' }: NavRowProps) {
+  return (
+    <Pressable onPress={onPress} style={{
+      flexDirection: 'row', alignItems: 'center',
+      backgroundColor: '#fff', borderRadius: 16, padding: 14,
+      marginBottom: 8, gap: 12,
+      borderWidth: 1.5, borderColor: '#EDE9FE',
+    }}>
+      <View style={{
+        width: 44, height: 44, borderRadius: 22,
+        backgroundColor: color + '20', alignItems: 'center', justifyContent: 'center',
+      }}>
+        <Text style={{ fontSize: 22 }}>{emoji}</Text>
+      </View>
+      <View style={{ flex: 1 }}>
+        <Text style={{ fontWeight: '800', color: '#1E1B4B', fontSize: 14 }}>{label}</Text>
+        {sub ? <Text style={{ color: '#9CA3AF', fontSize: 11, marginTop: 1 }}>{sub}</Text> : null}
+      </View>
+      <Text style={{ fontSize: 18, color: '#9CA3AF' }}>›</Text>
     </Pressable>
   );
 }
 
 export default function SettingsScreen() {
-  const [soundOn, setSoundOn] = useState(true);
-  const [musicOn, setMusicOn] = useState(true);
-  const [notifsOn, setNotifsOn] = useState(true);
+  const [music, setMusic] = useState(true);
+  const [sfx, setSfx] = useState(true);
+  const [haptic, setHaptic] = useState(true);
+  const [notifications, setNotifications] = useState(true);
+  const [particles, setParticles] = useState(true);
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#0A0118' }}>
-      <StatusBar style="light" backgroundColor="#0A0118" />
+    <View style={{ flex: 1, backgroundColor: '#F5F3FF' }}>
+      <StatusBar style="dark" backgroundColor="#F5F3FF" />
       <SafeAreaView style={{ flex: 1 }} edges={['top', 'bottom']}>
         {/* Header */}
         <View style={{
           flexDirection: 'row', alignItems: 'center',
-          paddingHorizontal: 16, paddingVertical: 12, gap: 12,
+          paddingHorizontal: 16, paddingVertical: 12, gap: 10,
         }}>
-          <Pressable
-            onPress={() => router.back()}
-            style={{
-              width: 40, height: 40, borderRadius: 12,
-              backgroundColor: '#1A0A3E', alignItems: 'center', justifyContent: 'center',
-            }}
-          >
-            <ArrowLeft size={20} color="#C084FC" />
+          <Pressable onPress={() => router.back()} style={{
+            width: 36, height: 36, borderRadius: 18,
+            backgroundColor: '#EDE9FE', alignItems: 'center', justifyContent: 'center',
+            borderWidth: 1.5, borderColor: '#C4B5FD',
+          }}>
+            <Text style={{ fontSize: 16 }}>←</Text>
           </Pressable>
-          <Text style={{ flex: 1, color: '#fff', fontSize: 20, fontWeight: '800', textAlign: 'center' }}>
-            ⚙️ Settings
-          </Text>
-          <View style={{ width: 40 }} />
+          <Text style={{ fontSize: 22, fontWeight: '900', color: '#1E1B4B', flex: 1 }}>⚙️ Settings</Text>
         </View>
 
-        <ScrollView contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 40 }}>
-          {/* App icon + name */}
-          <View style={{ alignItems: 'center', marginVertical: 24 }}>
+        <ScrollView contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 32 }}>
+
+          {/* Profile card */}
+          <View style={{
+            backgroundColor: '#8B5CF6', borderRadius: 22, padding: 20,
+            flexDirection: 'row', alignItems: 'center', gap: 14,
+            marginBottom: 20,
+          }}>
             <View style={{
-              width: 80, height: 80, borderRadius: 24,
-              backgroundColor: '#3B0764', borderWidth: 3, borderColor: '#7C3AED',
-              alignItems: 'center', justifyContent: 'center', marginBottom: 8,
+              width: 64, height: 64, borderRadius: 32,
+              backgroundColor: 'rgba(255,255,255,0.25)',
+              alignItems: 'center', justifyContent: 'center',
+              borderWidth: 3, borderColor: '#fff',
             }}>
-              <Text style={{ fontSize: 40 }}>🐲</Text>
+              <Text style={{ fontSize: 32 }}>🐲</Text>
             </View>
-            <Text style={{ color: '#fff', fontSize: 18, fontWeight: '800' }}>Dragon Merge Kingdom</Text>
-            <Text style={{ color: '#6B4E9E', fontSize: 12, marginTop: 2 }}>Version 1.0.0</Text>
+            <View>
+              <Text style={{ color: '#fff', fontWeight: '900', fontSize: 18 }}>Dragon Master</Text>
+              <Text style={{ color: 'rgba(255,255,255,0.8)', fontSize: 12 }}>🏆 Best: 2,458 pts</Text>
+              <Text style={{ color: 'rgba(255,255,255,0.7)', fontSize: 11 }}>🔥 Streak: 4 days</Text>
+            </View>
           </View>
 
           {/* Audio section */}
-          <Text style={{ color: '#9D7EC9', fontWeight: '700', fontSize: 11, marginBottom: 10, letterSpacing: 1 }}>
-            AUDIO
+          <Text style={{ fontSize: 13, fontWeight: '800', color: '#5B21B6', marginBottom: 8, letterSpacing: 0.5 }}>
+            🔊 AUDIO
           </Text>
-          <SettingsRow
-            icon={<Volume2 size={18} color="#C084FC" />}
-            label="Sound Effects"
-            right={
-              <Switch
-                value={soundOn}
-                onValueChange={setSoundOn}
-                trackColor={{ false: '#2D1060', true: '#7C3AED' }}
-                thumbColor={soundOn ? '#E879F9' : '#6B4E9E'}
-              />
-            }
-          />
-          <SettingsRow
-            icon={<Music size={18} color="#C084FC" />}
-            label="Background Music"
-            right={
-              <Switch
-                value={musicOn}
-                onValueChange={setMusicOn}
-                trackColor={{ false: '#2D1060', true: '#7C3AED' }}
-                thumbColor={musicOn ? '#E879F9' : '#6B4E9E'}
-              />
-            }
-          />
+          <ToggleRow emoji="🎵" label="Background Music" sub="Relaxing fantasy theme" value={music} onToggle={setMusic} color="#8B5CF6" />
+          <ToggleRow emoji="🔔" label="Sound Effects" sub="Merge, coin, explosion sounds" value={sfx} onToggle={setSfx} color="#3B82F6" />
+          <ToggleRow emoji="📳" label="Haptic Feedback" sub="Vibration on merge and drop" value={haptic} onToggle={setHaptic} color="#10B981" />
 
-          {/* Notifications */}
-          <Text style={{ color: '#9D7EC9', fontWeight: '700', fontSize: 11, marginTop: 16, marginBottom: 10, letterSpacing: 1 }}>
-            NOTIFICATIONS
+          {/* Gameplay section */}
+          <Text style={{ fontSize: 13, fontWeight: '800', color: '#5B21B6', marginTop: 12, marginBottom: 8, letterSpacing: 0.5 }}>
+            🎮 GAMEPLAY
           </Text>
-          <SettingsRow
-            icon={<Bell size={18} color="#FBBF24" />}
-            label="Push Notifications"
-            right={
-              <Switch
-                value={notifsOn}
-                onValueChange={setNotifsOn}
-                trackColor={{ false: '#2D1060', true: '#7C3AED' }}
-                thumbColor={notifsOn ? '#E879F9' : '#6B4E9E'}
-              />
-            }
-          />
+          <ToggleRow emoji="✨" label="Particle Effects" sub="Disable for better performance" value={particles} onToggle={setParticles} color="#F59E0B" />
+          <ToggleRow emoji="🔔" label="Daily Reminder" sub="Notify me for daily rewards" value={notifications} onToggle={setNotifications} color="#EF4444" />
 
-          {/* Support */}
-          <Text style={{ color: '#9D7EC9', fontWeight: '700', fontSize: 11, marginTop: 16, marginBottom: 10, letterSpacing: 1 }}>
-            SUPPORT
+          {/* Navigation section */}
+          <Text style={{ fontSize: 13, fontWeight: '800', color: '#5B21B6', marginTop: 12, marginBottom: 8, letterSpacing: 0.5 }}>
+            🗺️ NAVIGATE
           </Text>
-          <SettingsRow
-            icon={<HelpCircle size={18} color="#38BDF8" />}
-            label="How to Play"
-            onPress={() => {}}
-          />
-          <SettingsRow
-            icon={<Info size={18} color="#38BDF8" />}
-            label="About"
-            onPress={() => {}}
-          />
+          <NavRow emoji="🗺️" label="World Map" sub="8 themed kingdoms" onPress={() => router.push('/(app)/world-map' as never)} color="#3B82F6" />
+          <NavRow emoji="📚" label="Dragon Collection" sub="Collect all 11 dragons" onPress={() => router.push('/(app)/collection' as never)} color="#8B5CF6" />
+          <NavRow emoji="🏪" label="Shop" sub="Boosters and currency" onPress={() => router.push('/(app)/shop' as never)} color="#F59E0B" />
+          <NavRow emoji="📅" label="Daily Rewards" sub="Claim your daily gift" onPress={() => router.push('/(app)/daily-rewards' as never)} color="#10B981" />
 
-          {/* Dragon Evolution Tree */}
-          <Text style={{ color: '#9D7EC9', fontWeight: '700', fontSize: 11, marginTop: 16, marginBottom: 10, letterSpacing: 1 }}>
-            GAME
+          {/* About section */}
+          <Text style={{ fontSize: 13, fontWeight: '800', color: '#5B21B6', marginTop: 12, marginBottom: 8, letterSpacing: 0.5 }}>
+            ℹ️ ABOUT
           </Text>
-          <SettingsRow
-            icon={<Text style={{ fontSize: 18 }}>🐉</Text>}
-            label="Dragon Evolution Tree"
-            onPress={() => router.push('/(app)/evolution-tree' as never)}
-          />
-          <SettingsRow
-            icon={<Text style={{ fontSize: 18 }}>🗺️</Text>}
-            label="World Map"
-            onPress={() => router.push('/(app)/world-map' as never)}
-          />
-          <SettingsRow
-            icon={<Text style={{ fontSize: 18 }}>📚</Text>}
-            label="Collection Book"
-            onPress={() => router.push('/(app)/collection' as never)}
-          />
+          <NavRow emoji="⭐" label="Rate Us" sub="Enjoying the game? Leave a review!" onPress={() => {}} color="#F59E0B" />
+          <NavRow emoji="🔒" label="Privacy Policy" onPress={() => {}} color="#6B7280" />
+          <NavRow emoji="📄" label="Terms of Service" onPress={() => {}} color="#6B7280" />
+
+          {/* Version */}
+          <View style={{ alignItems: 'center', marginTop: 16 }}>
+            <Text style={{ fontSize: 42 }}>🐲</Text>
+            <Text style={{ color: '#9CA3AF', fontSize: 12, fontWeight: '700' }}>Dragon Merge Kingdom v1.0.0</Text>
+            <Text style={{ color: '#C4B5FD', fontSize: 11, marginTop: 2 }}>Made with ❤️</Text>
+          </View>
         </ScrollView>
       </SafeAreaView>
     </View>

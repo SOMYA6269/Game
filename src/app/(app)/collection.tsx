@@ -1,241 +1,163 @@
-import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  Pressable,
-  ScrollView,
-  FlatList,
-} from 'react-native';
+import React, { useState, useRef, useEffect } from 'react';
+import { View, Text, Pressable, FlatList, Animated } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
-import { ArrowLeft } from 'lucide-react-native';
-import { DRAGON_LEVELS } from '@/lib/gameData';
-import type { DragonDef } from '@/lib/gameTypes';
+import { DRAGON_LEVELS, RARITY_CONFIG } from '../../lib/gameData';
+import type { Rarity } from '../../lib/gameTypes';
 
-type Tab = 'ALL' | 'COMMON' | 'RARE' | 'LEGENDARY';
+const UNLOCKED_LEVELS = [1, 2, 3, 4, 5, 6, 7];
+const RARITY_FILTERS: Array<Rarity | 'all'> = ['all', 'common', 'rare', 'epic', 'legendary', 'mythic'];
 
-const TABS: Tab[] = ['ALL', 'COMMON', 'RARE', 'LEGENDARY'];
+function DragonCard({ dragon, unlocked }: { dragon: typeof DRAGON_LEVELS[0]; unlocked: boolean }) {
+  const rarityConf = RARITY_CONFIG[dragon.rarity];
+  const bounce = useRef(new Animated.Value(0)).current;
+  useEffect(() => {
+    if (!unlocked) return;
+    const loop = Animated.loop(
+      Animated.sequence([
+        Animated.timing(bounce, { toValue: -6, duration: 900, useNativeDriver: true }),
+        Animated.timing(bounce, { toValue: 0, duration: 900, useNativeDriver: true }),
+      ])
+    );
+    loop.start();
+    return () => loop.stop();
+  }, [unlocked, bounce]);
 
-function DragonCard({ dragon, unlocked }: { dragon: DragonDef; unlocked: boolean }) {
   return (
-    <View style={{
-      width: '31%', aspectRatio: 0.85,
-      margin: '1%',
-      borderRadius: 16, overflow: 'hidden',
-      backgroundColor: unlocked ? dragon.bgColor : '#0F0520',
-      borderWidth: 2,
-      borderColor: unlocked ? dragon.color : '#2D1060',
-      alignItems: 'center', justifyContent: 'center', paddingVertical: 10,
-      shadowColor: unlocked ? dragon.glowColor : 'transparent',
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.5, shadowRadius: 6,
+    <Animated.View style={{
+      flex: 1, margin: 6,
+      backgroundColor: unlocked ? '#fff' : 'rgba(255,255,255,0.5)',
+      borderRadius: 20, padding: 14, alignItems: 'center',
+      borderWidth: 2.5,
+      borderColor: unlocked ? dragon.borderColor : '#E5E7EB',
+      shadowColor: unlocked ? dragon.color : '#000',
+      shadowOffset: { width: 0, height: 3 }, shadowOpacity: unlocked ? 0.2 : 0.05, shadowRadius: 6,
+      transform: [{ translateY: bounce }],
     }}>
-      {/* Rarity badge */}
+      {/* Dragon circle */}
       <View style={{
-        position: 'absolute', top: 6, right: 6,
-        backgroundColor: dragon.rarity === 'legendary' ? '#FBBF24' :
-          dragon.rarity === 'rare' ? '#C084FC' : '#6B7280',
-        borderRadius: 6, paddingHorizontal: 5, paddingVertical: 2,
+        width: 64, height: 64, borderRadius: 32,
+        backgroundColor: unlocked ? dragon.bgColor : '#F3F4F6',
+        borderWidth: 2.5, borderColor: unlocked ? dragon.borderColor : '#E5E7EB',
+        alignItems: 'center', justifyContent: 'center', marginBottom: 8,
+        shadowColor: dragon.glowColor, shadowOffset: { width: 0, height: 0 },
+        shadowOpacity: unlocked ? 0.8 : 0, shadowRadius: 10,
       }}>
-        <Text style={{ fontSize: 7, fontWeight: '800', color: '#1A0A2E' }}>
-          {dragon.rarity.toUpperCase()}
-        </Text>
+        {unlocked
+          ? <Text style={{ fontSize: 30 }}>{dragon.emoji}</Text>
+          : <Text style={{ fontSize: 28, opacity: 0.4 }}>❓</Text>
+        }
       </View>
 
-      {/* Dragon / locked */}
-      <View style={{
-        width: 56, height: 56, borderRadius: 28,
-        backgroundColor: unlocked ? `${dragon.color}22` : '#1A0A3E',
-        alignItems: 'center', justifyContent: 'center',
-        borderWidth: 2, borderColor: unlocked ? dragon.color : '#3B1A7A',
-      }}>
-        {unlocked ? (
-          <Text style={{ fontSize: 28 }}>{dragon.emoji}</Text>
-        ) : (
-          <Text style={{ fontSize: 22, opacity: 0.25 }}>?</Text>
-        )}
-      </View>
-
+      {/* Name */}
       <Text style={{
-        marginTop: 6, fontSize: 10, fontWeight: '700',
-        color: unlocked ? dragon.color : '#3B1A7A', textAlign: 'center',
-        paddingHorizontal: 4,
-      }} numberOfLines={1}>
+        fontWeight: '900', fontSize: 13, color: unlocked ? '#1E1B4B' : '#9CA3AF',
+        textAlign: 'center', marginBottom: 4,
+      }}>
         {unlocked ? dragon.name : '???'}
       </Text>
 
-      {/* Level indicator */}
+      {/* Rarity badge */}
       <View style={{
-        marginTop: 3,
-        backgroundColor: unlocked ? `${dragon.color}30` : '#1A0A3E',
-        borderRadius: 6, paddingHorizontal: 6, paddingVertical: 2,
+        backgroundColor: rarityConf.bg, borderRadius: 10,
+        paddingHorizontal: 8, paddingVertical: 2, marginBottom: 4,
       }}>
-        <Text style={{ fontSize: 9, color: unlocked ? dragon.color : '#3B1A7A', fontWeight: '600' }}>
-          Lv.{dragon.level}
+        <Text style={{ fontSize: 10, color: rarityConf.color, fontWeight: '800' }}>
+          {rarityConf.label}
         </Text>
       </View>
-    </View>
+
+      {/* Description */}
+      {unlocked && (
+        <Text style={{ fontSize: 10, color: '#6B7280', textAlign: 'center', lineHeight: 14 }}>
+          {dragon.description}
+        </Text>
+      )}
+
+      {/* Level badge */}
+      <View style={{
+        position: 'absolute', top: -8, right: -8,
+        backgroundColor: unlocked ? dragon.color : '#9CA3AF',
+        borderRadius: 10, width: 22, height: 22,
+        alignItems: 'center', justifyContent: 'center',
+        borderWidth: 2, borderColor: '#fff',
+      }}>
+        <Text style={{ color: '#fff', fontSize: 10, fontWeight: '900' }}>Lv{dragon.level}</Text>
+      </View>
+    </Animated.View>
   );
 }
 
 export default function CollectionScreen() {
-  const [activeTab, setActiveTab] = useState<Tab>('ALL');
-  // Simulate: first 7 dragons unlocked
-  const UNLOCKED_UP_TO = 7;
-
-  const filtered = DRAGON_LEVELS.filter(d =>
-    activeTab === 'ALL' ? true : d.rarity === activeTab.toLowerCase()
-  );
-
-  // Merge guide: green egg + green egg = green dragon
-  const mergeExample = DRAGON_LEVELS[0];
-  const mergeResult = DRAGON_LEVELS[6];
+  const [filter, setFilter] = useState<Rarity | 'all'>('all');
+  const filtered = DRAGON_LEVELS.filter(d => filter === 'all' || d.rarity === filter);
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#0A0118' }}>
-      <StatusBar style="light" backgroundColor="#0A0118" />
+    <View style={{ flex: 1, backgroundColor: '#F5F3FF' }}>
+      <StatusBar style="dark" backgroundColor="#F5F3FF" />
       <SafeAreaView style={{ flex: 1 }} edges={['top', 'bottom']}>
         {/* Header */}
         <View style={{
-          flexDirection: 'row', alignItems: 'center',
-          paddingHorizontal: 16, paddingVertical: 12, gap: 12,
+          flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16,
+          paddingVertical: 12, gap: 10,
         }}>
-          <Pressable
-            onPress={() => router.back()}
-            style={{
-              width: 40, height: 40, borderRadius: 12,
-              backgroundColor: '#1A0A3E', alignItems: 'center', justifyContent: 'center',
-            }}
-          >
-            <ArrowLeft size={20} color="#C084FC" />
-          </Pressable>
-          <Text style={{ flex: 1, color: '#fff', fontSize: 20, fontWeight: '800', textAlign: 'center' }}>
-            📚 Collection
-          </Text>
-          <View style={{ width: 40 }} />
-        </View>
-
-        {/* Filter tabs */}
-        <View style={{
-          flexDirection: 'row', paddingHorizontal: 16, gap: 8, marginBottom: 12,
-        }}>
-          {TABS.map(tab => (
-            <Pressable
-              key={tab}
-              onPress={() => setActiveTab(tab)}
-              style={{
-                flex: 1, paddingVertical: 8, borderRadius: 12, alignItems: 'center',
-                backgroundColor: activeTab === tab ? '#7C3AED' : '#1A0A3E',
-                borderWidth: 1.5,
-                borderColor: activeTab === tab ? '#9D4EDD' : '#2D1060',
-              }}
-            >
-              <Text style={{
-                fontSize: 10, fontWeight: '700',
-                color: activeTab === tab ? '#fff' : '#9D7EC9',
-              }}>
-                {tab}
-              </Text>
-            </Pressable>
-          ))}
-        </View>
-
-        {/* Dragon grid */}
-        <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingHorizontal: 12, paddingBottom: 24 }}>
-          <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-            {filtered.map(dragon => (
-              <DragonCard
-                key={dragon.level}
-                dragon={dragon}
-                unlocked={dragon.level <= UNLOCKED_UP_TO}
-              />
-            ))}
-          </View>
-
-          {/* Merge guide */}
-          <View style={{
-            marginTop: 20,
-            backgroundColor: '#78350F',
-            borderRadius: 18, padding: 16,
-            borderWidth: 2, borderColor: '#92400E',
+          <Pressable onPress={() => router.back()} style={{
+            width: 36, height: 36, borderRadius: 18,
+            backgroundColor: '#EDE9FE', alignItems: 'center', justifyContent: 'center',
+            borderWidth: 1.5, borderColor: '#C4B5FD',
           }}>
-            <Text style={{
-              color: '#FCD34D', fontWeight: '800', fontSize: 14,
-              textAlign: 'center', marginBottom: 12,
-            }}>
-              MERGE GUIDE
-            </Text>
-            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 12 }}>
-              {/* Source */}
-              <View style={{
-                width: 52, height: 52, borderRadius: 26,
-                backgroundColor: mergeExample.bgColor,
-                borderWidth: 2, borderColor: mergeExample.color,
-                alignItems: 'center', justifyContent: 'center',
-              }}>
-                <Text style={{ fontSize: 24 }}>{mergeExample.emoji}</Text>
-              </View>
-              <Text style={{ color: '#FCD34D', fontSize: 20, fontWeight: '900' }}>+</Text>
-              <View style={{
-                width: 52, height: 52, borderRadius: 26,
-                backgroundColor: mergeExample.bgColor,
-                borderWidth: 2, borderColor: mergeExample.color,
-                alignItems: 'center', justifyContent: 'center',
-              }}>
-                <Text style={{ fontSize: 24 }}>{mergeExample.emoji}</Text>
-              </View>
-              <Text style={{ color: '#FCD34D', fontSize: 20, fontWeight: '900' }}>=</Text>
-              {/* Result */}
-              <View style={{
-                width: 60, height: 60, borderRadius: 30,
-                backgroundColor: mergeResult.bgColor,
-                borderWidth: 2.5, borderColor: mergeResult.color,
-                alignItems: 'center', justifyContent: 'center',
-                shadowColor: mergeResult.glowColor,
-                shadowOffset: { width: 0, height: 0 },
-                shadowOpacity: 0.9, shadowRadius: 10,
-              }}>
-                <Text style={{ fontSize: 28 }}>{mergeResult.emoji}</Text>
-              </View>
-            </View>
-            <Text style={{ color: '#FCD34D', textAlign: 'center', fontSize: 12, marginTop: 10, fontWeight: '600' }}>
-              2× {mergeExample.name} → {mergeResult.name}
+            <Text style={{ fontSize: 16 }}>←</Text>
+          </Pressable>
+          <Text style={{ fontSize: 22, fontWeight: '900', color: '#1E1B4B', flex: 1 }}>📚 Dragon Book</Text>
+          <View style={{
+            backgroundColor: '#EDE9FE', borderRadius: 12,
+            paddingHorizontal: 10, paddingVertical: 4,
+          }}>
+            <Text style={{ color: '#5B21B6', fontWeight: '800', fontSize: 13 }}>
+              {UNLOCKED_LEVELS.length}/{DRAGON_LEVELS.length}
             </Text>
           </View>
-        </ScrollView>
-
-        {/* Bottom nav */}
-        <View style={{
-          flexDirection: 'row', borderTopWidth: 1, borderTopColor: '#1A0A3E',
-          backgroundColor: '#0A0118',
-        }}>
-          {[
-            { emoji: '🏪', label: 'SHOP', route: '/(app)/shop' },
-            { emoji: '📚', label: 'COLLECTION', route: null, active: true },
-            { emoji: '🏠', label: 'HOME', route: '/(app)/home' },
-            { emoji: '🎁', label: 'EVENT', route: '/(app)/daily-rewards' },
-            { emoji: '⚙️', label: 'SETTING', route: '/(app)/settings' },
-          ].map(item => (
-            <Pressable
-              key={item.label}
-              onPress={() => item.route ? router.push(item.route as never) : null}
-              style={{
-                flex: 1, alignItems: 'center', paddingVertical: 10,
-                borderTopWidth: item.active ? 2 : 0,
-                borderTopColor: '#7C3AED',
-              }}
-            >
-              <Text style={{ fontSize: 22 }}>{item.emoji}</Text>
-              <Text style={{
-                fontSize: 8, fontWeight: '700', marginTop: 3,
-                color: item.active ? '#C084FC' : '#6B4E9E',
-              }}>
-                {item.label}
-              </Text>
-            </Pressable>
-          ))}
         </View>
+
+        {/* Filters */}
+        <FlatList
+          horizontal
+          data={RARITY_FILTERS}
+          keyExtractor={r => r}
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 10, gap: 8 }}
+          renderItem={({ item: r }) => {
+            const conf = r === 'all' ? { color: '#5B21B6', bg: '#EDE9FE' } : RARITY_CONFIG[r];
+            const active = filter === r;
+            return (
+              <Pressable
+                onPress={() => setFilter(r)}
+                style={{
+                  backgroundColor: active ? conf.color : conf.bg,
+                  borderRadius: 16, paddingHorizontal: 14, paddingVertical: 6,
+                  borderWidth: 2, borderColor: conf.color,
+                }}
+              >
+                <Text style={{ color: active ? '#fff' : conf.color, fontWeight: '800', fontSize: 12 }}>
+                  {r.charAt(0).toUpperCase() + r.slice(1)}
+                </Text>
+              </Pressable>
+            );
+          }}
+        />
+
+        {/* Grid */}
+        <FlatList
+          data={filtered}
+          numColumns={2}
+          keyExtractor={d => `${d.level}`}
+          contentInsetAdjustmentBehavior="automatic"
+          contentContainerStyle={{ paddingHorizontal: 10, paddingBottom: 24 }}
+          renderItem={({ item }) => (
+            <DragonCard dragon={item} unlocked={UNLOCKED_LEVELS.includes(item.level)} />
+          )}
+        />
       </SafeAreaView>
     </View>
   );

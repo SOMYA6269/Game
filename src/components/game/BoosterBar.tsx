@@ -6,86 +6,66 @@ interface BoosterButtonProps {
   label: string;
   count: number;
   color: string;
+  bgColor: string;
   onPress: () => void;
   disabled?: boolean;
 }
 
-function BoosterButton({ emoji, label, count, color, onPress, disabled }: BoosterButtonProps) {
+function BoosterButton({ emoji, label, count, color, bgColor, onPress, disabled }: BoosterButtonProps) {
   return (
     <Pressable
       onPress={onPress}
       disabled={disabled || count === 0}
-      className="items-center flex-1 active:opacity-70"
+      style={{
+        flex: 1, alignItems: 'center',
+        backgroundColor: disabled || count === 0 ? '#F3F4F6' : bgColor,
+        borderRadius: 14, paddingVertical: 8,
+        borderWidth: 2,
+        borderColor: disabled || count === 0 ? '#E5E7EB' : color,
+        opacity: count === 0 ? 0.5 : 1,
+        position: 'relative',
+      }}
     >
-      <View
-        style={{
-          width: 60,
-          height: 60,
-          borderRadius: 18,
-          backgroundColor: disabled || count === 0 ? '#1F1035' : color,
-          alignItems: 'center',
-          justifyContent: 'center',
-          borderWidth: 2,
-          borderColor: disabled || count === 0 ? '#3D2060' : `${color}AA`,
-          borderCurve: 'continuous' as const,
-          opacity: disabled || count === 0 ? 0.5 : 1,
-          shadowColor: disabled || count === 0 ? 'transparent' : color,
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.4,
-          shadowRadius: 6,
-        }}
-      >
-        <Text style={{ fontSize: 26 }}>{emoji}</Text>
-      </View>
-
-      {/* Count badge */}
-      <View
-        style={{
-          position: 'absolute',
-          top: -4,
-          right: 4,
-          backgroundColor: '#FBBF24',
-          borderRadius: 8,
-          minWidth: 18,
-          height: 18,
-          alignItems: 'center',
-          justifyContent: 'center',
-          paddingHorizontal: 4,
-        }}
-      >
-        <Text style={{ fontSize: 10, fontWeight: '800', color: '#1A0A2E' }}>{count}</Text>
-      </View>
-
-      <Text style={{ fontSize: 10, color: '#9D7EC9', marginTop: 4, fontWeight: '600' }}>
-        {label}
-      </Text>
+      <Text style={{ fontSize: 22 }}>{emoji}</Text>
+      <Text style={{
+        fontSize: 9, fontWeight: '800',
+        color: disabled || count === 0 ? '#9CA3AF' : color,
+        marginTop: 2, letterSpacing: 0.3,
+      }}>{label}</Text>
+      {count > 0 && (
+        <View style={{
+          position: 'absolute', top: -6, right: -6,
+          backgroundColor: color, borderRadius: 9,
+          width: 18, height: 18, alignItems: 'center', justifyContent: 'center',
+          borderWidth: 2, borderColor: '#fff',
+        }}>
+          <Text style={{ color: '#fff', fontSize: 9, fontWeight: '900' }}>{count}</Text>
+        </View>
+      )}
     </Pressable>
   );
 }
 
-interface BoosterBarProps {
-  boosters: { undo: number; shake: number; bomb: number; magnet: number };
+interface Props {
+  boosters: { undo: number; bomb: number; magnet: number; freeze: number; rainbow: number };
   onUndo: () => void;
-  onShake: () => void;
   onBomb: () => void;
   onMagnet: () => void;
-  bombMode?: boolean;
+  onFreeze: () => void;
+  onRainbow: () => void;
 }
 
-export default function BoosterBar({ boosters, onUndo, onShake, onBomb, onMagnet, bombMode }: BoosterBarProps) {
+export default function BoosterBar({ boosters, onUndo, onBomb, onMagnet, onFreeze, onRainbow }: Props) {
   return (
-    <View
-      className="flex-row items-center justify-around px-4 py-3"
-      style={{
-        backgroundColor: '#0F0520',
-        borderTopWidth: 1,
-        borderTopColor: '#2D1060',
-      }}
-    >
-      <BoosterButton emoji="↩️" label="UNDO" count={boosters.undo} color="#3B82F6" onPress={onUndo} />
-      <BoosterButton emoji="🌀" label="SHAKE" count={boosters.shake} color="#8B5CF6" onPress={onShake} />
-      <BoosterButton emoji="💣" label="BOMB" count={boosters.bomb} color="#EF4444" onPress={onBomb} disabled={bombMode} />
-      <BoosterButton emoji="🧲" label="MAGNET" count={boosters.magnet} color="#10B981" onPress={onMagnet} />
+    <View style={{
+      flexDirection: 'row', gap: 6,
+      paddingHorizontal: 8, paddingBottom: 8,
+    }}>
+      <BoosterButton emoji="↩️" label="UNDO"    count={boosters.undo}    color="#8B5CF6" bgColor="#EDE9FE" onPress={onUndo} />
+      <BoosterButton emoji="💣" label="BOMB"    count={boosters.bomb}    color="#EF4444" bgColor="#FEE2E2" onPress={onBomb} />
+      <BoosterButton emoji="🧲" label="MAGNET"  count={boosters.magnet}  color="#3B82F6" bgColor="#DBEAFE" onPress={onMagnet} />
+      <BoosterButton emoji="❄️" label="FREEZE"  count={boosters.freeze}  color="#06B6D4" bgColor="#CFFAFE" onPress={onFreeze} />
+      <BoosterButton emoji="🌈" label="RAINBOW" count={boosters.rainbow} color="#EC4899" bgColor="#FCE7F3" onPress={onRainbow} />
     </View>
   );
 }
