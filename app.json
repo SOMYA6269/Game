@@ -2,7 +2,7 @@
   "expo": {
     "name": "Dragon Merge Puzzle Game",
     "slug": "dragon-merge-kingdom",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -29,7 +29,8 @@
       "expo-asset",
       "expo-sqlite",
       "expo-font",
-      "expo-system-ui"
+      "expo-system-ui",
+      "expo-image"
     ],
     "router": {
       "root": "src"

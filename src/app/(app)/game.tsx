@@ -5,6 +5,7 @@ import {
   View, Text, Pressable, Animated, PanResponder,
   useWindowDimensions,
 } from 'react-native';
+import { Image } from 'expo-image';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
@@ -93,89 +94,14 @@ function storeFromState(s: GameState): PhysicsStore {
   };
 }
 
-// ─── Animated background: sky, clouds, mountains ─────────────────────────────
-const Cloud = memo(function Cloud({
-  x, y, size, speed, opacity,
-}: { x: number; y: number; size: number; speed: number; opacity: number }) {
-  const anim = useRef(new Animated.Value(x)).current;
-  useEffect(() => {
-    const screenW = 420;
-    const travel = screenW + size * 2;
-    const dur = (travel / speed) * 1000;
-    const loop = Animated.loop(
-      Animated.sequence([
-        Animated.timing(anim, { toValue: screenW + size, duration: dur, useNativeDriver: true }),
-        Animated.timing(anim, { toValue: -size, duration: 0, useNativeDriver: true }),
-      ])
-    );
-    loop.start();
-    return () => loop.stop();
-  }, [anim, size, speed]);
-  return (
-    <Animated.Text style={{
-      position: 'absolute', top: y, fontSize: size,
-      opacity, transform: [{ translateX: anim }],
-    }}>☁️</Animated.Text>
-  );
-});
-
-const FloatParticle = memo(function FloatParticle({
-  x, size, color, delay,
-}: { x: number; size: number; color: string; delay: number }) {
-  const anim = useRef(new Animated.Value(0)).current;
-  useEffect(() => {
-    const loop = Animated.loop(
-      Animated.sequence([
-        Animated.delay(delay),
-        Animated.timing(anim, { toValue: -120, duration: 3500, useNativeDriver: true }),
-        Animated.timing(anim, { toValue: 0, duration: 0, useNativeDriver: true }),
-      ])
-    );
-    loop.start();
-    return () => loop.stop();
-  }, [anim, delay]);
-  const opacity = anim.interpolate({ inputRange: [-120, -60, 0], outputRange: [0, 0.7, 0] });
-  return (
-    <Animated.View style={{
-      position: 'absolute', bottom: 0, left: x,
-      width: size, height: size, borderRadius: size / 2,
-      backgroundColor: color, opacity,
-      transform: [{ translateY: anim }],
-    }} />
-  );
-});
+// ─── Cartoon fantasy background image ────────────────────────────────────────
+const GAME_BG_URL = 'https://miaoda-site-img.s3cdn.medo.dev/images/KLing_c4970965-c4c8-4e42-ab6b-aef8f88a9a93.jpg';
 
 function GameBackground({ width }: { width: number }) {
-  const FLOAT_PARTICLES = useMemo(() => Array.from({ length: 14 }, (_, i) => ({
-    x: (i / 14) * width + Math.random() * 20,
-    size: 4 + Math.random() * 5,
-    color: ['#FCD34D', '#C4B5FD', '#6EE7B7', '#F9A8D4', '#93C5FD'][i % 5],
-    delay: i * 260,
-  })), [width]);
-
   return (
     <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>
-      {/* Sky gradient (stacked views) */}
-      <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: '#ADE3F7' }} />
-      <View style={{ position: 'absolute', top: '35%', left: 0, right: 0, bottom: 0, backgroundColor: '#C8ECFB' }} />
-      <View style={{ position: 'absolute', top: '65%', left: 0, right: 0, bottom: 0, backgroundColor: '#DFF5FF' }} />
-
-      {/* Clouds */}
-      <Cloud x={30}   y={18}  size={28} speed={22} opacity={0.55} />
-      <Cloud x={160}  y={40}  size={22} speed={15} opacity={0.45} />
-      <Cloud x={280}  y={12}  size={34} speed={18} opacity={0.5}  />
-      <Cloud x={80}   y={65}  size={18} speed={12} opacity={0.35} />
-      <Cloud x={220}  y={72}  size={24} speed={20} opacity={0.4}  />
-
-      {/* Mountains (static emoji, subtle) */}
-      <Text style={{ position: 'absolute', bottom: 0, left: -8,  fontSize: 80, opacity: 0.15 }}>⛰️</Text>
-      <Text style={{ position: 'absolute', bottom: 0, right: -8, fontSize: 90, opacity: 0.13 }}>🏔️</Text>
-      <Text style={{ position: 'absolute', bottom: 0, left: '20%', fontSize: 55, opacity: 0.12 }}>🌲</Text>
-      <Text style={{ position: 'absolute', bottom: 0, right: '22%', fontSize: 48, opacity: 0.12 }}>🌳</Text>
-      <Text style={{ position: 'absolute', bottom: 0, right: '8%', fontSize: 42, opacity: 0.1 }}>🏰</Text>
-
-      {/* Floating sparkles */}
-      {FLOAT_PARTICLES.map((p, i) => <FloatParticle key={i} {...p} />)}
+      <Image source={{ uri: GAME_BG_URL }} style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }} contentFit="cover" />
+      <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(10,5,30,0.38)' }} />
     </View>
   );
 }
@@ -440,64 +366,76 @@ const TopHUD = memo(function TopHUD({
   const progress = Math.min(score / Math.max(levelTarget, 1), 1);
   return (
     <View style={{
-      backgroundColor: 'rgba(255,255,255,0.92)',
-      borderRadius: 20, marginHorizontal: 8, marginBottom: 6,
-      padding: 10,
-      borderWidth: 2, borderColor: '#E8D5FF',
-      shadowColor: '#8B5CF6', shadowOffset: { width: 0, height: 3 },
-      shadowOpacity: 0.15, shadowRadius: 8,
+      backgroundColor: 'rgba(15,8,40,0.88)',
+      borderRadius: 0, marginHorizontal: 0, marginBottom: 4,
+      paddingHorizontal: 10, paddingVertical: 8,
+      borderBottomWidth: 2, borderBottomColor: '#f59e0b',
     }}>
-      <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 6 }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
         {/* Pause */}
         <Pressable onPress={onPause} style={{
-          width: 34, height: 34, borderRadius: 17,
-          backgroundColor: '#F3F0FF', alignItems: 'center', justifyContent: 'center',
-          borderWidth: 1.5, borderColor: '#C4B5FD', marginRight: 8,
+          width: 36, height: 36, borderRadius: 18,
+          backgroundColor: 'rgba(255,255,255,0.12)',
+          alignItems: 'center', justifyContent: 'center',
+          borderWidth: 1.5, borderColor: 'rgba(255,255,255,0.25)',
         }}>
-          <Text style={{ fontSize: 14 }}>⏸</Text>
+          <Text style={{ fontSize: 16 }}>⏸</Text>
         </Pressable>
-        {/* Scores */}
-        <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-          <View style={{ alignItems: 'center' }}>
-            <Text style={{ fontSize: 9, color: '#8B5CF6', fontWeight: '800', letterSpacing: 0.8 }}>SCORE</Text>
-            <Text style={{ fontSize: 20, fontWeight: '900', color: '#1E1B4B' }}>{score.toLocaleString()}</Text>
+
+        {/* Best score */}
+        <View style={{
+          backgroundColor: 'rgba(245,158,11,0.18)', borderRadius: 12,
+          paddingHorizontal: 10, paddingVertical: 5,
+          borderWidth: 1.5, borderColor: '#f59e0b', alignItems: 'center',
+        }}>
+          <Text style={{ fontSize: 8, color: '#f59e0b', fontWeight: '800', letterSpacing: 0.5 }}>⭐ BEST</Text>
+          <Text style={{ fontSize: 14, fontWeight: '900', color: '#fff' }}>{Math.max(score, bestScore).toLocaleString()}</Text>
+        </View>
+
+        {/* Current score */}
+        <View style={{ flex: 1, alignItems: 'center' }}>
+          <Text style={{ fontSize: 9, color: 'rgba(255,255,255,0.6)', fontWeight: '700', letterSpacing: 0.5 }}>SCORE</Text>
+          <Text style={{ fontSize: 26, fontWeight: '900', color: '#fff', lineHeight: 28 }}>{score.toLocaleString()}</Text>
+        </View>
+
+        {/* Currency */}
+        <View style={{ gap: 3, alignItems: 'flex-end' }}>
+          <View style={{
+            flexDirection: 'row', alignItems: 'center', gap: 4,
+            backgroundColor: 'rgba(255,255,255,0.1)',
+            borderRadius: 12, paddingHorizontal: 8, paddingVertical: 3,
+            borderWidth: 1, borderColor: 'rgba(245,158,11,0.4)',
+          }}>
+            <Text style={{ fontSize: 12 }}>🪙</Text>
+            <Text style={{ fontWeight: '800', fontSize: 12, color: '#fff' }}>{coins >= 1000 ? `${(coins/1000).toFixed(1)}k` : coins}</Text>
+            <Pressable style={{ backgroundColor: '#f59e0b', borderRadius: 7, width: 16, height: 16, alignItems: 'center', justifyContent: 'center' }} onPress={() => router.push('/(app)/shop' as never)}>
+              <Text style={{ color: '#fff', fontSize: 10, fontWeight: '900', lineHeight: 14 }}>+</Text>
+            </Pressable>
           </View>
           <View style={{
-            backgroundColor: '#8B5CF6', borderRadius: 14,
-            paddingHorizontal: 12, paddingVertical: 4, alignItems: 'center',
+            flexDirection: 'row', alignItems: 'center', gap: 4,
+            backgroundColor: 'rgba(255,255,255,0.1)',
+            borderRadius: 12, paddingHorizontal: 8, paddingVertical: 3,
+            borderWidth: 1, borderColor: 'rgba(139,92,246,0.4)',
           }}>
-            <Text style={{ color: '#fff', fontSize: 9, fontWeight: '700' }}>LV</Text>
-            <Text style={{ color: '#fff', fontSize: 17, fontWeight: '900', lineHeight: 18 }}>{level}</Text>
-          </View>
-          <View style={{ alignItems: 'center' }}>
-            <Text style={{ fontSize: 9, color: '#F59E0B', fontWeight: '800', letterSpacing: 0.8 }}>BEST</Text>
-            <Text style={{ fontSize: 15, fontWeight: '800', color: '#1E1B4B' }}>{Math.max(score, bestScore).toLocaleString()}</Text>
-          </View>
-        </View>
-        {/* Currency */}
-        <View style={{ alignItems: 'flex-end', marginLeft: 8, gap: 2 }}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
-            <Text style={{ fontSize: 12 }}>🪙</Text>
-            <Text style={{ fontWeight: '800', fontSize: 12, color: '#92400E' }}>{coins >= 1000 ? `${(coins/1000).toFixed(1)}k` : coins}</Text>
-          </View>
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
             <Text style={{ fontSize: 12 }}>💎</Text>
-            <Text style={{ fontWeight: '800', fontSize: 12, color: '#5B21B6' }}>{gems}</Text>
+            <Text style={{ fontWeight: '800', fontSize: 12, color: '#fff' }}>{gems}</Text>
+            <Pressable style={{ backgroundColor: '#8b5cf6', borderRadius: 7, width: 16, height: 16, alignItems: 'center', justifyContent: 'center' }} onPress={() => router.push('/(app)/shop' as never)}>
+              <Text style={{ color: '#fff', fontSize: 10, fontWeight: '900', lineHeight: 14 }}>+</Text>
+            </Pressable>
           </View>
         </View>
       </View>
+
       {/* Progress bar */}
-      <View style={{ height: 7, backgroundColor: '#EDE9FE', borderRadius: 4, overflow: 'hidden' }}>
+      <View style={{ height: 5, backgroundColor: 'rgba(255,255,255,0.12)', borderRadius: 3, overflow: 'hidden', marginTop: 6 }}>
         <View style={{
           position: 'absolute', left: 0, top: 0, bottom: 0,
           width: `${progress * 100}%`,
-          backgroundColor: progress >= 1 ? '#22C55E' : '#8B5CF6',
-          borderRadius: 4,
+          backgroundColor: progress >= 1 ? '#22c55e' : '#f59e0b',
+          borderRadius: 3,
         }} />
       </View>
-      <Text style={{ fontSize: 9, color: '#9CA3AF', textAlign: 'right', marginTop: 2, fontWeight: '600' }}>
-        {score.toLocaleString()} / {levelTarget.toLocaleString()}
-      </Text>
     </View>
   );
 });
@@ -511,32 +449,30 @@ const NextPreviewPanel = memo(function NextPreviewPanel({ level, nextNextLevel }
   }, [level, appear]);
   return (
     <View style={{
-      backgroundColor: 'rgba(255,255,255,0.92)',
-      borderRadius: 16, padding: 8, alignItems: 'center', minWidth: 66,
+      backgroundColor: 'rgba(15,8,40,0.9)',
+      borderRadius: 18, padding: 8, alignItems: 'center', minWidth: 70,
       borderWidth: 2, borderColor: def.borderColor,
-      shadowColor: def.color, shadowOffset: { width: 0, height: 3 },
-      shadowOpacity: 0.25, shadowRadius: 8,
     }}>
-      <Text style={{ fontSize: 9, color: '#8B5CF6', fontWeight: '800', letterSpacing: 0.5 }}>NEXT</Text>
+      <Text style={{ fontSize: 8, color: '#f59e0b', fontWeight: '900', letterSpacing: 0.5, marginBottom: 3 }}>NEXT</Text>
       <Animated.View style={{
-        width: 50, height: 50, borderRadius: 25,
-        backgroundColor: def.bgColor, borderWidth: 2, borderColor: def.borderColor,
-        alignItems: 'center', justifyContent: 'center', marginVertical: 4,
+        width: 54, height: 54, borderRadius: 27,
+        backgroundColor: def.bgColor, borderWidth: 2.5, borderColor: def.borderColor,
+        alignItems: 'center', justifyContent: 'center', marginBottom: 4,
         transform: [{ scale: appear }],
       }}>
-        <Text style={{ fontSize: 24 }}>{def.emoji}</Text>
+        <Text style={{ fontSize: 26 }}>{def.emoji}</Text>
       </Animated.View>
-      <Text style={{ fontSize: 9, color: '#374151', fontWeight: '700' }} numberOfLines={1}>{def.name}</Text>
+      <Text style={{ fontSize: 9, color: '#fff', fontWeight: '700' }} numberOfLines={1}>{def.name}</Text>
       {nextNextLevel && (
-        <View style={{ marginTop: 4, alignItems: 'center' }}>
-          <Text style={{ fontSize: 8, color: '#9CA3AF' }}>then</Text>
+        <View style={{ marginTop: 6, alignItems: 'center' }}>
+          <Text style={{ fontSize: 7, color: 'rgba(255,255,255,0.5)', marginBottom: 2 }}>then</Text>
           <View style={{
-            width: 26, height: 26, borderRadius: 13,
+            width: 28, height: 28, borderRadius: 14,
             backgroundColor: getDragonDef(nextNextLevel).bgColor,
-            borderWidth: 1.5, borderColor: getDragonDef(nextNextLevel).borderColor,
-            alignItems: 'center', justifyContent: 'center', marginTop: 2,
+            borderWidth: 2, borderColor: getDragonDef(nextNextLevel).borderColor,
+            alignItems: 'center', justifyContent: 'center',
           }}>
-            <Text style={{ fontSize: 12 }}>{getDragonDef(nextNextLevel).emoji}</Text>
+            <Text style={{ fontSize: 13 }}>{getDragonDef(nextNextLevel).emoji}</Text>
           </View>
         </View>
       )}
@@ -553,7 +489,7 @@ const BoosterBtn = memo(function BoosterBtn({ emoji, label, count, color, bgColo
   const press = () => {
     if (count === 0) return;
     Animated.sequence([
-      Animated.timing(scale, { toValue: 0.88, duration: 70, useNativeDriver: true }),
+      Animated.timing(scale, { toValue: 0.85, duration: 70, useNativeDriver: true }),
       Animated.spring(scale, { toValue: 1, tension: 90, friction: 4, useNativeDriver: true }),
     ]).start();
     onPress();
@@ -561,27 +497,27 @@ const BoosterBtn = memo(function BoosterBtn({ emoji, label, count, color, bgColo
   return (
     <Pressable onPress={press} style={{ flex: 1, alignItems: 'center' }}>
       <Animated.View style={{
-        backgroundColor: count === 0 ? '#F3F4F6' : bgColor,
-        borderRadius: 14, paddingVertical: 8,
-        borderWidth: 2, borderColor: count === 0 ? '#E5E7EB' : color,
-        opacity: count === 0 ? 0.5 : 1,
+        backgroundColor: count === 0 ? 'rgba(255,255,255,0.08)' : bgColor,
+        borderRadius: 16, paddingVertical: 9, paddingHorizontal: 2,
+        borderWidth: 2.5, borderColor: count === 0 ? 'rgba(255,255,255,0.15)' : color,
+        opacity: count === 0 ? 0.45 : 1,
         alignItems: 'center', width: '100%',
         transform: [{ scale }],
       }}>
         {count > 0 && (
           <View style={{
-            position: 'absolute', top: -7, right: -7,
-            backgroundColor: color, borderRadius: 9, width: 18, height: 18,
+            position: 'absolute', top: -7, right: -5,
+            backgroundColor: '#ef4444', borderRadius: 9, minWidth: 18, height: 18,
             alignItems: 'center', justifyContent: 'center',
-            borderWidth: 2, borderColor: '#fff',
+            borderWidth: 2, borderColor: '#fff', paddingHorizontal: 2,
           }}>
             <Text style={{ color: '#fff', fontSize: 9, fontWeight: '900' }}>{count}</Text>
           </View>
         )}
-        <Text style={{ fontSize: 22 }}>{emoji}</Text>
+        <Text style={{ fontSize: 24 }}>{emoji}</Text>
         <Text style={{
-          fontSize: 9, fontWeight: '800', letterSpacing: 0.3, marginTop: 1,
-          color: count === 0 ? '#9CA3AF' : color,
+          fontSize: 8, fontWeight: '900', letterSpacing: 0.3, marginTop: 2,
+          color: count === 0 ? 'rgba(255,255,255,0.3)' : color,
         }}>{label}</Text>
       </Animated.View>
     </Pressable>
@@ -986,21 +922,19 @@ export default function GameScreen() {
         />
 
         {/* Board row */}
-        <View style={{ flexDirection: 'row', justifyContent: 'center', paddingHorizontal: 8, flex: 1, gap: 8 }}>
+        <View style={{ flexDirection: 'row', justifyContent: 'center', paddingHorizontal: 6, flex: 1, gap: 6 }}>
           {/* Wooden frame + board */}
           <Animated.View style={{
             transform: [{ translateX: shakeXY.x }, { translateY: shakeXY.y }],
           }}>
             <View style={{
-              backgroundColor: '#7A4E22',
+              backgroundColor: '#8B4513',
               borderRadius: 22,
               padding: BOARD_PADDING,
-              shadowColor: '#3D2409',
-              shadowOffset: { width: 0, height: 8 },
-              shadowOpacity: 0.55,
-              shadowRadius: 14,
-              borderWidth: 3.5,
-              borderColor: '#4E2E0A',
+              borderWidth: 4,
+              borderColor: '#4E2407',
+              borderTopWidth: 6,
+              borderBottomWidth: 8,
             }}>
               {/* Wooden top rail with dragon preview */}
               <View style={{
@@ -1009,13 +943,13 @@ export default function GameScreen() {
                 borderRadius: 14,
                 marginBottom: 4,
                 overflow: 'visible',
-                borderWidth: 1.5, borderColor: '#7A4E22',
+                borderWidth: 2, borderColor: '#6B3A10',
               }}>
                 {/* Wood grain lines */}
-                {[14, 32, 50].map(y => (
+                {[10, 24, 40].map(y => (
                   <View key={y} style={{
                     position: 'absolute', left: 8, right: 8, top: y, height: 1,
-                    backgroundColor: 'rgba(100,60,10,0.2)',
+                    backgroundColor: 'rgba(60,30,5,0.18)',
                   }} />
                 ))}
                 {/* Aim dots on drop zone */}
@@ -1031,9 +965,6 @@ export default function GameScreen() {
                   backgroundColor: previewDef.bgColor,
                   borderWidth: 2.5, borderColor: previewDef.borderColor,
                   alignItems: 'center', justifyContent: 'center',
-                  shadowColor: previewDef.glowColor,
-                  shadowOffset: { width: 0, height: 0 },
-                  shadowOpacity: 0.9, shadowRadius: 8,
                 }}>
                   {/* Gloss */}
                   <View style={{
@@ -1051,24 +982,12 @@ export default function GameScreen() {
                 style={{
                   width: BOARD_W,
                   height: BOARD_H,
-                  backgroundColor: '#E8F8FF',
+                  backgroundColor: '#1a2e1a',
                   borderRadius: 12,
                   overflow: 'hidden',
-                  borderWidth: 1.5, borderColor: '#BAD8F0',
+                  borderWidth: 2, borderColor: '#0d1a0d',
                 }}
               >
-                {/* Inner glow at top */}
-                <View style={{
-                  position: 'absolute', top: 0, left: 0, right: 0, height: 60,
-                  backgroundColor: 'rgba(200,240,255,0.4)',
-                }} />
-                {/* Grid hint lines */}
-                {[80, 160, 240, 320, 400].map(yy => (
-                  <View key={yy} style={{
-                    position: 'absolute', left: 0, right: 0, top: yy, height: 1,
-                    backgroundColor: 'rgba(100,170,220,0.08)',
-                  }} />
-                ))}
 
                 {/* Dragons */}
                 {display.objects.map(obj => (
@@ -1180,27 +1099,28 @@ export default function GameScreen() {
             </View>
           </Animated.View>
 
-          {/* Right panel: next preview + evolution guide */}
-          <View style={{ gap: 8, paddingTop: 4, alignItems: 'center', justifyContent: 'flex-start' }}>
+          {/* Right panel: next preview + chain */}
+          <View style={{ gap: 6, paddingTop: 4, alignItems: 'center', justifyContent: 'flex-start' }}>
             <NextPreviewPanel level={display.nextLevel} nextNextLevel={nextNextLevel} />
             {/* Mini chain */}
             <View style={{
-              backgroundColor: 'rgba(255,255,255,0.85)',
-              borderRadius: 14, padding: 8, alignItems: 'center', gap: 3, minWidth: 66,
+              backgroundColor: 'rgba(15,8,40,0.88)',
+              borderRadius: 14, padding: 8, alignItems: 'center', gap: 3, minWidth: 70,
+              borderWidth: 1.5, borderColor: 'rgba(245,158,11,0.3)',
             }}>
-              <Text style={{ fontSize: 9, color: '#8B5CF6', fontWeight: '800', marginBottom: 2 }}>CHAIN</Text>
+              <Text style={{ fontSize: 8, color: '#f59e0b', fontWeight: '900', marginBottom: 2, letterSpacing: 0.5 }}>CHAIN</Text>
               {[1,2,3,4,5].map(lvl => {
                 const d = getDragonDef(lvl);
                 return (
                   <View key={lvl} style={{ alignItems: 'center' }}>
                     <View style={{
-                      width: 26, height: 26, borderRadius: 13,
+                      width: 28, height: 28, borderRadius: 14,
                       backgroundColor: d.bgColor, borderWidth: 2, borderColor: d.borderColor,
                       alignItems: 'center', justifyContent: 'center',
                     }}>
-                      <Text style={{ fontSize: 12 }}>{d.emoji}</Text>
+                      <Text style={{ fontSize: 13 }}>{d.emoji}</Text>
                     </View>
-                    {lvl < 5 && <Text style={{ color: '#D1D5DB', fontSize: 8, lineHeight: 10 }}>↓</Text>}
+                    {lvl < 5 && <Text style={{ color: 'rgba(255,255,255,0.3)', fontSize: 8, lineHeight: 10 }}>↓</Text>}
                   </View>
                 );
               })}
@@ -1209,12 +1129,47 @@ export default function GameScreen() {
         </View>
 
         {/* Booster bar */}
-        <View style={{ flexDirection: 'row', gap: 6, paddingHorizontal: 8, paddingTop: 6, paddingBottom: 4 }}>
-          <BoosterBtn emoji="↩️" label="UNDO"    count={display.boosters.undo}    color="#8B5CF6" bgColor="#EDE9FE" onPress={handleUndo} />
-          <BoosterBtn emoji="💣" label="BOMB"    count={display.boosters.bomb}    color="#EF4444" bgColor="#FEE2E2" onPress={handleBomb} />
-          <BoosterBtn emoji="🧲" label="MAGNET"  count={display.boosters.magnet}  color="#3B82F6" bgColor="#DBEAFE" onPress={handleMagnet} />
-          <BoosterBtn emoji="❄️" label="FREEZE"  count={display.boosters.freeze}  color="#06B6D4" bgColor="#CFFAFE" onPress={handleFreeze} />
-          <BoosterBtn emoji="🌈" label="RAINBOW" count={display.boosters.rainbow} color="#EC4899" bgColor="#FCE7F3" onPress={handleRainbow} />
+        <View style={{
+          flexDirection: 'row', gap: 5, paddingHorizontal: 8, paddingTop: 6, paddingBottom: 2,
+          backgroundColor: 'rgba(15,8,40,0.7)',
+        }}>
+          <BoosterBtn emoji="↩️" label="UNDO"   count={display.boosters.undo}   color="#c084fc" bgColor="rgba(192,132,252,0.18)" onPress={handleUndo} />
+          <BoosterBtn emoji="🌪️" label="SHAKE"  count={display.boosters.freeze} color="#60a5fa" bgColor="rgba(96,165,250,0.18)"  onPress={handleFreeze} />
+          <BoosterBtn emoji="💣" label="BOMB"   count={display.boosters.bomb}   color="#f87171" bgColor="rgba(248,113,113,0.18)" onPress={handleBomb} />
+          <BoosterBtn emoji="🧲" label="MAGNET" count={display.boosters.magnet} color="#4ade80" bgColor="rgba(74,222,128,0.18)"  onPress={handleMagnet} />
+        </View>
+
+        {/* Bottom toolbar */}
+        <View style={{
+          flexDirection: 'row', alignItems: 'center',
+          backgroundColor: 'rgba(10,5,25,0.96)',
+          borderTopWidth: 2, borderTopColor: '#f59e0b',
+          paddingVertical: 6, paddingHorizontal: 4, paddingBottom: 14,
+        }}>
+          {([
+            { emoji: '🏪', label: 'SHOP',       route: '/(app)/shop' },
+            { emoji: '📦', label: 'COLLECTION', route: '/(app)/collection' },
+            { emoji: '🏠', label: 'HOME',       route: '/(app)/home' },
+            { emoji: '📅', label: 'EVENT',      route: '/(app)/daily-rewards' },
+            { emoji: '⚙️', label: 'SETTING',    route: '/(app)/settings' },
+          ] as { emoji: string; label: string; route: string }[]).map(item => (
+            <Pressable
+              key={item.label}
+              onPress={() => router.push(item.route as never)}
+              style={{ flex: 1, alignItems: 'center', paddingVertical: 4 }}
+            >
+              <View style={{
+                width: 42, height: 42, borderRadius: 14,
+                backgroundColor: 'rgba(255,200,60,0.1)',
+                alignItems: 'center', justifyContent: 'center',
+                borderWidth: 1.5, borderColor: 'rgba(245,158,11,0.25)',
+                marginBottom: 2,
+              }}>
+                <Text style={{ fontSize: 20 }}>{item.emoji}</Text>
+              </View>
+              <Text style={{ color: 'rgba(255,220,120,0.85)', fontSize: 8, fontWeight: '800', letterSpacing: 0.3 }}>{item.label}</Text>
+            </Pressable>
+          ))}
         </View>
       </SafeAreaView>
     </View>

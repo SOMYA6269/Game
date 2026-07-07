@@ -11,3 +11,7 @@ android/
 ios/
 web-build/
 tasks/
+/.skills
+/tasks
+package.json.[0-9]*
+historical_context.txt

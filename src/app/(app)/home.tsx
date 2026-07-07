@@ -1,281 +1,226 @@
 import React, { useRef, useEffect } from 'react';
-import { View, Text, Pressable, ScrollView, Animated } from 'react-native';
+import { View, Text, Pressable, Animated, StyleSheet, useWindowDimensions } from 'react-native';
+import { Image } from 'expo-image';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 
-// Floating cloud decoration
-function Cloud({ style }: { style: object }) {
-  const anim = useRef(new Animated.Value(0)).current;
+const BG_URL     = 'https://miaoda-site-img.s3cdn.medo.dev/images/KLing_c4970965-c4c8-4e42-ab6b-aef8f88a9a93.jpg';
+const DRAGON_URL = 'https://miaoda-site-img.s3cdn.medo.dev/images/KLing_1b02b9ed-f34f-4c43-8a3e-e5d5a290bafd.jpg';
+
+// ── Floating cloud ───────────────────────────────────────────────────────────
+function FloatCloud({ style, delay = 0 }: { style: object; delay?: number }) {
+  const y = useRef(new Animated.Value(0)).current;
+  const x = useRef(new Animated.Value(0)).current;
   useEffect(() => {
+    const lY = Animated.loop(
+      Animated.sequence([
+        Animated.timing(y, { toValue: -10, duration: 2400 + delay, useNativeDriver: true }),
+        Animated.timing(y, { toValue: 0,   duration: 2400 + delay, useNativeDriver: true }),
+      ])
+    );
+    const lX = Animated.loop(
+      Animated.sequence([
+        Animated.timing(x, { toValue: 6,  duration: 4000 + delay * 0.5, useNativeDriver: true }),
+        Animated.timing(x, { toValue: 0,  duration: 4000 + delay * 0.5, useNativeDriver: true }),
+      ])
+    );
+    lY.start(); lX.start();
+    return () => { lY.stop(); lX.stop(); };
+  }, [y, x, delay]);
+  return (
+    <Animated.View style={[style, { transform: [{ translateY: y }, { translateX: x }] }]}>
+      <Text style={{ fontSize: 44, opacity: 0.7 }}>☁️</Text>
+    </Animated.View>
+  );
+}
+
+// ── Bouncing dragon mascot ───────────────────────────────────────────────────
+function Mascot() {
+  const y = useRef(new Animated.Value(0)).current;
+  const scale = useRef(new Animated.Value(0.3)).current;
+  useEffect(() => {
+    Animated.spring(scale, { toValue: 1, tension: 40, friction: 5, useNativeDriver: true }).start();
     const loop = Animated.loop(
       Animated.sequence([
-        Animated.timing(anim, { toValue: 8, duration: 3000 + Math.random()*2000, useNativeDriver: true }),
-        Animated.timing(anim, { toValue: 0, duration: 3000 + Math.random()*2000, useNativeDriver: true }),
+        Animated.timing(y, { toValue: -14, duration: 700, useNativeDriver: true }),
+        Animated.timing(y, { toValue: 0,   duration: 700, useNativeDriver: true }),
       ])
     );
     loop.start();
     return () => loop.stop();
-  }, [anim]);
+  }, [y, scale]);
   return (
-    <Animated.View style={[style, { transform: [{ translateY: anim }] }]}>
-      <Text style={{ fontSize: 40, opacity: 0.55 }}>☁️</Text>
+    <Animated.View style={{ transform: [{ translateY: y }, { scale }] }}>
+      <Image source={{ uri: DRAGON_URL }} style={{ width: 100, height: 100, borderRadius: 50 }} contentFit="cover" />
     </Animated.View>
   );
 }
 
-// Bouncing logo dragon
-function LogoDragon() {
-  const bounce = useRef(new Animated.Value(0)).current;
-  const spin = useRef(new Animated.Value(0)).current;
-  useEffect(() => {
-    const b = Animated.loop(
-      Animated.sequence([
-        Animated.timing(bounce, { toValue: -12, duration: 500, useNativeDriver: true }),
-        Animated.timing(bounce, { toValue: 0, duration: 500, useNativeDriver: true }),
-      ])
-    );
-    b.start();
-    return () => b.stop();
-  }, [bounce]);
-  const rotate = spin.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '360deg'] });
+// ── Currency chip ────────────────────────────────────────────────────────────
+function CurrencyChip({ icon, amount, onAdd }: { icon: string; amount: string; onAdd: () => void }) {
   return (
-    <Animated.View style={{ transform: [{ translateY: bounce }] }}>
-      <Text style={{ fontSize: 80 }}>🐲</Text>
-    </Animated.View>
+    <View style={styles.chip}>
+      <Text style={{ fontSize: 18 }}>{icon}</Text>
+      <Text style={styles.chipText}>{amount}</Text>
+      <Pressable onPress={onAdd} style={styles.chipAdd}>
+        <Text style={{ color: '#fff', fontWeight: '900', fontSize: 14, lineHeight: 18 }}>+</Text>
+      </Pressable>
+    </View>
   );
 }
 
-interface NavCardProps {
-  emoji: string; label: string; sub?: string; color: string;
-  bgColor: string; borderColor: string; badge?: string;
-  onPress: () => void;
-}
-function NavCard({ emoji, label, sub, color, bgColor, borderColor, badge, onPress }: NavCardProps) {
+// ── Bottom nav item ──────────────────────────────────────────────────────────
+function NavItem({ emoji, label, onPress, badge }: { emoji: string; label: string; onPress: () => void; badge?: string }) {
   const scale = useRef(new Animated.Value(1)).current;
-  const press = () => {
+  const tap = () => {
     Animated.sequence([
-      Animated.timing(scale, { toValue: 0.93, duration: 80, useNativeDriver: true }),
-      Animated.timing(scale, { toValue: 1, duration: 120, useNativeDriver: true }),
+      Animated.timing(scale, { toValue: 0.88, duration: 70, useNativeDriver: true }),
+      Animated.spring(scale, { toValue: 1, tension: 60, friction: 4, useNativeDriver: true }),
     ]).start();
     onPress();
   };
   return (
-    <Pressable onPress={press} style={{ flex: 1 }}>
-      <Animated.View style={{
-        flex: 1,
-        backgroundColor: bgColor, borderRadius: 20, padding: 14,
-        alignItems: 'center', justifyContent: 'center',
-        borderWidth: 2.5, borderColor,
-        shadowColor: color,
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.3, shadowRadius: 8,
-        transform: [{ scale }],
-        minHeight: 90,
-      }}>
-        {badge ? (
-          <View style={{
-            position: 'absolute', top: -8, right: -8,
-            backgroundColor: '#EF4444', borderRadius: 10,
-            paddingHorizontal: 6, paddingVertical: 2,
-            borderWidth: 2, borderColor: '#fff',
-          }}>
-            <Text style={{ color: '#fff', fontSize: 9, fontWeight: '900' }}>{badge}</Text>
-          </View>
-        ) : null}
-        <Text style={{ fontSize: 30, marginBottom: 4 }}>{emoji}</Text>
-        <Text style={{ color, fontWeight: '900', fontSize: 13, textAlign: 'center' }}>{label}</Text>
-        {sub ? <Text style={{ color, opacity: 0.65, fontSize: 10, marginTop: 2 }}>{sub}</Text> : null}
+    <Pressable onPress={tap} style={styles.navItem}>
+      <Animated.View style={{ transform: [{ scale }], alignItems: 'center' }}>
+        <View style={styles.navIconBox}>
+          <Text style={{ fontSize: 22 }}>{emoji}</Text>
+          {badge ? (
+            <View style={styles.navBadge}><Text style={{ color: '#fff', fontSize: 9, fontWeight: '900' }}>{badge}</Text></View>
+          ) : null}
+        </View>
+        <Text style={styles.navLabel}>{label}</Text>
       </Animated.View>
     </Pressable>
   );
 }
 
 export default function HomeScreen() {
-  const logoScale = useRef(new Animated.Value(0.5)).current;
-  useEffect(() => {
-    Animated.spring(logoScale, { toValue: 1, tension: 50, friction: 5, useNativeDriver: true }).start();
-  }, [logoScale]);
+  const { width } = useWindowDimensions();
+  const playScale = useRef(new Animated.Value(1)).current;
+
+  const pulsePlay = () => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(playScale, { toValue: 1.05, duration: 800, useNativeDriver: true }),
+        Animated.timing(playScale, { toValue: 1,    duration: 800, useNativeDriver: true }),
+      ])
+    ).start();
+  };
+  useEffect(() => { pulsePlay(); }, [playScale]);
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#87CEEB' }}>
-      <StatusBar style="dark" backgroundColor="#87CEEB" />
-      {/* Sky gradient layers */}
-      <View style={{ ...StyleSheet.absoluteFillObject, backgroundColor: '#ADE3F7' }} />
-      <View style={{ ...StyleSheet.absoluteFillObject, backgroundColor: '#C5EDFC', top: '40%' }} />
-      <View style={{ ...StyleSheet.absoluteFillObject, backgroundColor: '#E8F8FF', top: '70%' }} />
+    <View style={styles.root}>
+      <StatusBar style="light" backgroundColor="transparent" translucent />
+
+      {/* Full-screen fantasy background */}
+      <Image source={{ uri: BG_URL }} style={StyleSheet.absoluteFillObject} contentFit="cover" />
+      {/* Overlay gradient for readability */}
+      <View style={[StyleSheet.absoluteFillObject, { backgroundColor: 'rgba(20,10,50,0.28)' }]} />
 
       {/* Floating clouds */}
-      <Cloud style={{ position: 'absolute', top: 60, left: 20 }} />
-      <Cloud style={{ position: 'absolute', top: 100, right: 30 }} />
-      <Cloud style={{ position: 'absolute', top: 180, left: '40%' }} />
+      <FloatCloud style={{ position: 'absolute', top: 60,  left: 12  }} delay={0} />
+      <FloatCloud style={{ position: 'absolute', top: 90,  right: 20 }} delay={600} />
+      <FloatCloud style={{ position: 'absolute', top: 160, left: 90  }} delay={1200} />
 
-      {/* Mountains */}
-      <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 120 }}>
-        <Text style={{ position: 'absolute', bottom: 0, left: -10, fontSize: 90, opacity: 0.25 }}>⛰️</Text>
-        <Text style={{ position: 'absolute', bottom: 0, right: -10, fontSize: 100, opacity: 0.2 }}>🏔️</Text>
-        <Text style={{ position: 'absolute', bottom: 0, left: '25%', fontSize: 70, opacity: 0.18 }}>🌲</Text>
-        <Text style={{ position: 'absolute', bottom: 0, right: '30%', fontSize: 60, opacity: 0.18 }}>🌳</Text>
-      </View>
+      <SafeAreaView style={{ flex: 1 }} edges={['top']}>
+        {/* ── Top bar ── */}
+        <View style={styles.topBar}>
+          {/* Logo */}
+          <View style={styles.logo}>
+            <Text style={styles.logoLine1}>🐲 DRAGON MERGE</Text>
+            <Text style={styles.logoLine2}>✨ KINGDOM ✨</Text>
+          </View>
+          {/* Currency */}
+          <View style={{ gap: 6 }}>
+            <CurrencyChip icon="🪙" amount="1,560" onAdd={() => router.push('/(app)/shop' as never)} />
+            <CurrencyChip icon="💎" amount="260"   onAdd={() => router.push('/(app)/shop' as never)} />
+          </View>
+        </View>
 
-      {/* Castle in background */}
-      <Text style={{ position: 'absolute', top: 200, right: 20, fontSize: 50, opacity: 0.2 }}>🏰</Text>
-
-      <SafeAreaView style={{ flex: 1 }} edges={['top', 'bottom']}>
-        <ScrollView contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 32 }} showsVerticalScrollIndicator={false}>
-
-          {/* Logo section */}
-          <Animated.View style={{
-            alignItems: 'center', paddingTop: 20, paddingBottom: 16,
-            transform: [{ scale: logoScale }],
-          }}>
-            <LogoDragon />
-            <View style={{
-              backgroundColor: 'rgba(255,255,255,0.85)',
-              borderRadius: 24, paddingHorizontal: 24, paddingVertical: 10,
-              marginTop: 8, borderWidth: 2.5, borderColor: '#8B5CF6',
-              shadowColor: '#8B5CF6', shadowOffset: { width: 0, height: 4 },
-              shadowOpacity: 0.35, shadowRadius: 12,
-            }}>
-              <Text style={{
-                fontSize: 30, fontWeight: '900', color: '#5B21B6',
-                letterSpacing: 1, textAlign: 'center',
-              }}>Dragon Merge</Text>
-              <Text style={{
-                fontSize: 20, fontWeight: '900', color: '#F59E0B',
-                textAlign: 'center', letterSpacing: 2, marginTop: -4,
-              }}>✨ KINGDOM ✨</Text>
-            </View>
-
-            {/* Currency bar */}
-            <View style={{
-              flexDirection: 'row', gap: 10, marginTop: 12,
-              backgroundColor: 'rgba(255,255,255,0.88)',
-              borderRadius: 20, paddingHorizontal: 20, paddingVertical: 8,
-              borderWidth: 1.5, borderColor: '#E8D5FF',
-            }}>
-              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-                <Text style={{ fontSize: 20 }}>🪙</Text>
-                <Text style={{ fontWeight: '900', fontSize: 16, color: '#92400E' }}>1,000</Text>
-                <Pressable
-                  onPress={() => router.push('/(app)/shop' as never)}
-                  style={{ backgroundColor: '#F59E0B', borderRadius: 10, paddingHorizontal: 6, paddingVertical: 1 }}
-                >
-                  <Text style={{ color: '#fff', fontWeight: '900', fontSize: 12 }}>+</Text>
-                </Pressable>
-              </View>
-              <View style={{ width: 1.5, backgroundColor: '#E8D5FF' }} />
-              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-                <Text style={{ fontSize: 20 }}>💎</Text>
-                <Text style={{ fontWeight: '900', fontSize: 16, color: '#5B21B6' }}>120</Text>
-                <Pressable
-                  onPress={() => router.push('/(app)/shop' as never)}
-                  style={{ backgroundColor: '#8B5CF6', borderRadius: 10, paddingHorizontal: 6, paddingVertical: 1 }}
-                >
-                  <Text style={{ color: '#fff', fontWeight: '900', fontSize: 12 }}>+</Text>
-                </Pressable>
-              </View>
-            </View>
+        {/* ── Center area: mascot + PLAY ── */}
+        <View style={styles.center}>
+          <Mascot />
+          <Animated.View style={{ transform: [{ scale: playScale }], marginTop: 20 }}>
+            <Pressable
+              onPress={() => router.push('/(app)/game' as never)}
+              style={styles.playBtn}
+            >
+              <Text style={styles.playText}>▶ PLAY</Text>
+            </Pressable>
           </Animated.View>
-
-          {/* Big PLAY button */}
-          <Pressable
-            onPress={() => router.push('/(app)/game' as never)}
-            style={{
-              backgroundColor: '#22C55E',
-              borderRadius: 26, paddingVertical: 20,
-              alignItems: 'center', justifyContent: 'center',
-              flexDirection: 'row', gap: 12, marginBottom: 14,
-              borderWidth: 3, borderColor: '#16A34A',
-              shadowColor: '#16A34A',
-              shadowOffset: { width: 0, height: 6 },
-              shadowOpacity: 0.5, shadowRadius: 16,
-            }}
-          >
-            <Text style={{ fontSize: 36 }}>▶️</Text>
-            <View>
-              <Text style={{ color: '#fff', fontSize: 24, fontWeight: '900', letterSpacing: 1.5 }}>PLAY!</Text>
-              <Text style={{ color: 'rgba(255,255,255,0.8)', fontSize: 11, fontWeight: '700' }}>Level 1 · High Score: 0</Text>
-            </View>
-          </Pressable>
-
-          {/* Nav grid */}
-          <View style={{ flexDirection: 'row', gap: 10, marginBottom: 10 }}>
-            <NavCard emoji="🗺️" label="World Map" sub="8 Kingdoms" color="#1D4ED8" bgColor="#EFF6FF" borderColor="#93C5FD"
-              onPress={() => router.push('/(app)/world-map' as never)} />
-            <NavCard emoji="📚" label="Collection" sub="Discover all" color="#6D28D9" bgColor="#F5F3FF" borderColor="#C4B5FD"
-              onPress={() => router.push('/(app)/collection' as never)} />
-          </View>
-          <View style={{ flexDirection: 'row', gap: 10, marginBottom: 10 }}>
-            <NavCard emoji="🏪" label="Shop" sub="Boosters & more" color="#B45309" bgColor="#FFFBEB" borderColor="#FCD34D"
-              onPress={() => router.push('/(app)/shop' as never)} />
-            <NavCard emoji="📅" label="Daily Reward" sub="Day 1 — Claim!" color="#065F46" bgColor="#ECFDF5" borderColor="#6EE7B7"
-              badge="NEW" onPress={() => router.push('/(app)/daily-rewards' as never)} />
-          </View>
-          <View style={{ flexDirection: 'row', gap: 10, marginBottom: 10 }}>
-            <NavCard emoji="🏆" label="Achievements" sub="Earn trophies" color="#B45309" bgColor="#FFFBEB" borderColor="#FDE68A"
-              onPress={() => router.push('/(app)/daily-rewards' as never)} />
-            <NavCard emoji="🐉" label="Dragon Book" sub="11 dragons" color="#9D174D" bgColor="#FFF1F2" borderColor="#FECDD3"
-              onPress={() => router.push('/(app)/collection' as never)} />
-          </View>
-
-          {/* Best score card */}
-          <View style={{
-            backgroundColor: 'rgba(255,255,255,0.9)',
-            borderRadius: 20, padding: 16, marginTop: 4,
-            borderWidth: 2.5, borderColor: '#FCD34D',
-            flexDirection: 'row', alignItems: 'center', gap: 16,
-            shadowColor: '#F59E0B', shadowOffset: { width: 0, height: 4 },
-            shadowOpacity: 0.3, shadowRadius: 8,
-          }}>
-            <Text style={{ fontSize: 48 }}>🏆</Text>
-            <View style={{ flex: 1 }}>
-              <Text style={{ color: '#92400E', fontSize: 11, fontWeight: '800', letterSpacing: 1 }}>YOUR BEST SCORE</Text>
-              <Text style={{ color: '#F59E0B', fontSize: 32, fontWeight: '900' }}>0</Text>
-              <Text style={{ color: '#6B7280', fontSize: 11 }}>Merge dragons to set a record! 🐲</Text>
-            </View>
-          </View>
-
-          {/* Dragon row */}
-          <View style={{ marginTop: 18 }}>
-            <Text style={{
-              color: '#5B21B6', fontWeight: '800', fontSize: 13, letterSpacing: 0.5, marginBottom: 10,
-            }}>Meet the Dragons 🐲</Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginHorizontal: -16, paddingHorizontal: 16 }}>
-              {[
-                ['🥚','#DCFCE7','#16A34A'],
-                ['💙','#DBEAFE','#2563EB'],
-                ['💜','#F3E8FF','#7C3AED'],
-                ['🔥','#FEE2E2','#DC2626'],
-                ['⭐','#FEF3C7','#D97706'],
-                ['🐲','#D1FAE5','#059669'],
-                ['🐉','#CFFAFE','#0891B2'],
-                ['💎','#EDE9FE','#7C3AED'],
-                ['👑','#FEF9C3','#CA8A04'],
-                ['🌈','#FCE7F3','#DB2777'],
-              ].map(([emoji, bg, border], i) => (
-                <Pressable
-                  key={i}
-                  onPress={() => router.push('/(app)/collection' as never)}
-                  style={{
-                    width: 56, height: 56, borderRadius: 28,
-                    backgroundColor: bg as string,
-                    alignItems: 'center', justifyContent: 'center',
-                    marginRight: 10, borderWidth: 2.5, borderColor: border as string,
-                    shadowColor: border as string, shadowOffset: { width: 0, height: 2 },
-                    shadowOpacity: 0.3, shadowRadius: 4,
-                  }}
-                >
-                  <Text style={{ fontSize: 26 }}>{emoji}</Text>
-                </Pressable>
-              ))}
-            </ScrollView>
-          </View>
-        </ScrollView>
+        </View>
       </SafeAreaView>
+
+      {/* ── Bottom nav bar ── */}
+      <View style={styles.bottomNav}>
+        <NavItem emoji="🗺️" label="WORLD MAP"   onPress={() => router.push('/(app)/world-map'  as never)} />
+        <NavItem emoji="📦" label="COLLECTION"  onPress={() => router.push('/(app)/collection' as never)} />
+        <NavItem emoji="📅" label="DAILY"       onPress={() => router.push('/(app)/daily-rewards' as never)} badge="!" />
+        <NavItem emoji="🏪" label="SHOP"        onPress={() => router.push('/(app)/shop'       as never)} />
+        <NavItem emoji="⚙️" label="SETTINGS"    onPress={() => router.push('/(app)/settings'   as never)} />
+      </View>
     </View>
   );
 }
 
-// Inline StyleSheet to avoid the import issue
-const StyleSheet = { absoluteFillObject: { position: 'absolute' as const, top: 0, left: 0, right: 0, bottom: 0 } };
+const styles = StyleSheet.create({
+  root: { flex: 1, backgroundColor: '#1a3a6b' },
+  topBar: {
+    flexDirection: 'row', alignItems: 'flex-start',
+    paddingHorizontal: 14, paddingTop: 6, paddingBottom: 8,
+    justifyContent: 'space-between',
+  },
+  logo: {
+    backgroundColor: 'rgba(20,10,50,0.72)',
+    borderRadius: 16, paddingHorizontal: 14, paddingVertical: 8,
+    borderWidth: 2, borderColor: '#f59e0b',
+  },
+  logoLine1: { color: '#fff',    fontWeight: '900', fontSize: 18, letterSpacing: 0.5 },
+  logoLine2: { color: '#f59e0b', fontWeight: '900', fontSize: 14, textAlign: 'center', marginTop: -2 },
+  chip: {
+    flexDirection: 'row', alignItems: 'center', gap: 5,
+    backgroundColor: 'rgba(20,10,50,0.75)',
+    borderRadius: 20, paddingHorizontal: 10, paddingVertical: 5,
+    borderWidth: 1.5, borderColor: 'rgba(255,220,100,0.45)',
+    minWidth: 110,
+  },
+  chipText: { color: '#fff', fontWeight: '900', fontSize: 14, flex: 1 },
+  chipAdd: {
+    backgroundColor: '#f59e0b', borderRadius: 10,
+    width: 22, height: 22, alignItems: 'center', justifyContent: 'center',
+  },
+  center: {
+    flex: 1, alignItems: 'center', justifyContent: 'center',
+    paddingBottom: 20,
+  },
+  playBtn: {
+    backgroundColor: '#22c55e',
+    borderRadius: 28, paddingVertical: 18, paddingHorizontal: 60,
+    borderWidth: 3.5, borderColor: '#15803d',
+    shadowColor: '#00ff44', shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.5, shadowRadius: 18,
+  },
+  playText: { color: '#fff', fontSize: 30, fontWeight: '900', letterSpacing: 3 },
+  bottomNav: {
+    flexDirection: 'row',
+    backgroundColor: 'rgba(20,10,50,0.93)',
+    borderTopWidth: 2, borderTopColor: '#f59e0b',
+    paddingBottom: 20, paddingTop: 8,
+  },
+  navItem: { flex: 1, alignItems: 'center' },
+  navIconBox: {
+    width: 44, height: 44, borderRadius: 14,
+    backgroundColor: 'rgba(255,200,60,0.15)',
+    alignItems: 'center', justifyContent: 'center',
+    borderWidth: 1.5, borderColor: 'rgba(255,200,60,0.3)',
+    marginBottom: 3,
+  },
+  navBadge: {
+    position: 'absolute', top: -4, right: -4,
+    backgroundColor: '#ef4444', borderRadius: 8,
+    paddingHorizontal: 4, paddingVertical: 1,
+    borderWidth: 1.5, borderColor: '#fff',
+  },
+  navLabel: { color: 'rgba(255,220,120,0.9)', fontSize: 9, fontWeight: '700', letterSpacing: 0.5 },
+});
