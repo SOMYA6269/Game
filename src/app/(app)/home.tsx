@@ -64,14 +64,14 @@ function NavCard({ emoji, label, sub, color, bgColor, borderColor, badge, onPres
     <Pressable onPress={press} style={{ flex: 1 }}>
       <Animated.View style={{
         flex: 1,
-        backgroundColor: bgColor, borderRadius: 20, padding: 14,
+        backgroundColor: bgColor, borderRadius: 24, padding: 16,
         alignItems: 'center', justifyContent: 'center',
-        borderWidth: 2.5, borderColor,
+        borderWidth: 3, borderColor,
         shadowColor: color,
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.3, shadowRadius: 8,
+        shadowOffset: { width: 0, height: 6 },
+        shadowOpacity: 0.4, shadowRadius: 12,
         transform: [{ scale }],
-        minHeight: 90,
+        minHeight: 100,
       }}>
         {badge ? (
           <View style={{
@@ -83,9 +83,9 @@ function NavCard({ emoji, label, sub, color, bgColor, borderColor, badge, onPres
             <Text style={{ color: '#fff', fontSize: 9, fontWeight: '900' }}>{badge}</Text>
           </View>
         ) : null}
-        <Text style={{ fontSize: 30, marginBottom: 4 }}>{emoji}</Text>
-        <Text style={{ color, fontWeight: '900', fontSize: 13, textAlign: 'center' }}>{label}</Text>
-        {sub ? <Text style={{ color, opacity: 0.65, fontSize: 10, marginTop: 2 }}>{sub}</Text> : null}
+        <Text style={{ fontSize: 32, marginBottom: 6 }}>{emoji}</Text>
+        <Text style={{ color, fontWeight: '900', fontSize: 14, textAlign: 'center', letterSpacing: 0.3 }}>{label}</Text>
+        {sub ? <Text style={{ color, opacity: 0.7, fontSize: 11, marginTop: 3, fontWeight: '600' }}>{sub}</Text> : null}
       </Animated.View>
     </Pressable>
   );
@@ -182,20 +182,20 @@ export default function HomeScreen() {
           <Pressable
             onPress={() => router.push('/(app)/game' as never)}
             style={{
-              backgroundColor: '#22C55E',
-              borderRadius: 26, paddingVertical: 20,
+              backgroundColor: '#10B981',
+              borderRadius: 28, paddingVertical: 22,
               alignItems: 'center', justifyContent: 'center',
-              flexDirection: 'row', gap: 12, marginBottom: 14,
-              borderWidth: 3, borderColor: '#16A34A',
-              shadowColor: '#16A34A',
-              shadowOffset: { width: 0, height: 6 },
-              shadowOpacity: 0.5, shadowRadius: 16,
+              flexDirection: 'row', gap: 14, marginBottom: 16,
+              borderWidth: 3.5, borderColor: '#059669',
+              shadowColor: '#059669',
+              shadowOffset: { width: 0, height: 8 },
+              shadowOpacity: 0.6, shadowRadius: 18,
             }}
           >
-            <Text style={{ fontSize: 36 }}>▶️</Text>
+            <Text style={{ fontSize: 40 }}>▶️</Text>
             <View>
-              <Text style={{ color: '#fff', fontSize: 24, fontWeight: '900', letterSpacing: 1.5 }}>PLAY!</Text>
-              <Text style={{ color: 'rgba(255,255,255,0.8)', fontSize: 11, fontWeight: '700' }}>Level 1 · High Score: 0</Text>
+              <Text style={{ color: '#fff', fontSize: 26, fontWeight: '900', letterSpacing: 1.5 }}>PLAY</Text>
+              <Text style={{ color: 'rgba(255,255,255,0.9)', fontSize: 12, fontWeight: '700', marginTop: -2 }}>Level 1 • Score: 0</Text>
             </View>
           </Pressable>
 

@@ -146,35 +146,37 @@ const FloatParticle = memo(function FloatParticle({
 });
 
 function GameBackground({ width }: { width: number }) {
-  const FLOAT_PARTICLES = useMemo(() => Array.from({ length: 14 }, (_, i) => ({
-    x: (i / 14) * width + Math.random() * 20,
-    size: 4 + Math.random() * 5,
-    color: ['#FCD34D', '#C4B5FD', '#6EE7B7', '#F9A8D4', '#93C5FD'][i % 5],
-    delay: i * 260,
+  const FLOAT_PARTICLES = useMemo(() => Array.from({ length: 18 }, (_, i) => ({
+    x: (i / 18) * width + Math.random() * 20,
+    size: 3 + Math.random() * 6,
+    color: ['#FFD700', '#FF69B4', '#00CED1', '#32CD32', '#FF6347', '#87CEEB'][i % 6],
+    delay: i * 220,
   })), [width]);
 
   return (
     <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>
-      {/* Sky gradient (stacked views) */}
-      <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: '#ADE3F7' }} />
-      <View style={{ position: 'absolute', top: '35%', left: 0, right: 0, bottom: 0, backgroundColor: '#C8ECFB' }} />
-      <View style={{ position: 'absolute', top: '65%', left: 0, right: 0, bottom: 0, backgroundColor: '#DFF5FF' }} />
+      {/* Enhanced sky gradient (premium look) */}
+      <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: '#87CEEB' }} />
+      <View style={{ position: 'absolute', top: '25%', left: 0, right: 0, bottom: 0, backgroundColor: '#B0E0E6' }} />
+      <View style={{ position: 'absolute', top: '60%', left: 0, right: 0, bottom: 0, backgroundColor: '#E0FFFF' }} />
+      
+      {/* Soft glow overlay */}
+      <View style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '40%', backgroundColor: 'rgba(255,255,255,0.1)' }} />
 
-      {/* Clouds */}
-      <Cloud x={30}   y={18}  size={28} speed={22} opacity={0.55} />
-      <Cloud x={160}  y={40}  size={22} speed={15} opacity={0.45} />
-      <Cloud x={280}  y={12}  size={34} speed={18} opacity={0.5}  />
-      <Cloud x={80}   y={65}  size={18} speed={12} opacity={0.35} />
-      <Cloud x={220}  y={72}  size={24} speed={20} opacity={0.4}  />
+      {/* Animated Clouds with more cloud-like appearance */}
+      <Cloud x={30}   y={12}  size={32} speed={20} opacity={0.65} />
+      <Cloud x={160}  y={38}  size={26} speed={14} opacity={0.55} />
+      <Cloud x={280}  y={8}   size={38} speed={16} opacity={0.6}  />
+      <Cloud x={80}   y={68}  size={20} speed={11} opacity={0.4} />
+      <Cloud x={220}  y={75}  size={28} speed={18} opacity={0.5}  />
 
-      {/* Mountains (static emoji, subtle) */}
-      <Text style={{ position: 'absolute', bottom: 0, left: -8,  fontSize: 80, opacity: 0.15 }}>⛰️</Text>
-      <Text style={{ position: 'absolute', bottom: 0, right: -8, fontSize: 90, opacity: 0.13 }}>🏔️</Text>
-      <Text style={{ position: 'absolute', bottom: 0, left: '20%', fontSize: 55, opacity: 0.12 }}>🌲</Text>
-      <Text style={{ position: 'absolute', bottom: 0, right: '22%', fontSize: 48, opacity: 0.12 }}>🌳</Text>
-      <Text style={{ position: 'absolute', bottom: 0, right: '8%', fontSize: 42, opacity: 0.1 }}>🏰</Text>
+      {/* Distant mountains/landscape (subtle background) */}
+      <Text style={{ position: 'absolute', bottom: '8%', left: '-5%',  fontSize: 100, opacity: 0.08 }}>⛰️</Text>
+      <Text style={{ position: 'absolute', bottom: '5%', right: '0%', fontSize: 110, opacity: 0.07 }}>🏔️</Text>
+      <Text style={{ position: 'absolute', bottom: '10%', left: '15%', fontSize: 65, opacity: 0.09 }}>🌲</Text>
+      <Text style={{ position: 'absolute', bottom: '8%', right: '18%', fontSize: 58, opacity: 0.08 }}>🌳</Text>
 
-      {/* Floating sparkles */}
+      {/* Floating sparkles with more particles */}
       {FLOAT_PARTICLES.map((p, i) => <FloatParticle key={i} {...p} />)}
     </View>
   );
@@ -440,21 +442,23 @@ const TopHUD = memo(function TopHUD({
   const progress = Math.min(score / Math.max(levelTarget, 1), 1);
   return (
     <View style={{
-      backgroundColor: 'rgba(255,255,255,0.92)',
-      borderRadius: 20, marginHorizontal: 8, marginBottom: 6,
-      padding: 10,
-      borderWidth: 2, borderColor: '#E8D5FF',
-      shadowColor: '#8B5CF6', shadowOffset: { width: 0, height: 3 },
-      shadowOpacity: 0.15, shadowRadius: 8,
+      backgroundColor: 'rgba(255,255,255,0.95)',
+      borderRadius: 24, marginHorizontal: 8, marginBottom: 8,
+      padding: 14,
+      borderWidth: 2.5, borderColor: '#D084FF',
+      shadowColor: '#9333EA', shadowOffset: { width: 0, height: 6 },
+      shadowOpacity: 0.25, shadowRadius: 12,
     }}>
       <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 6 }}>
         {/* Pause */}
         <Pressable onPress={onPause} style={{
-          width: 34, height: 34, borderRadius: 17,
-          backgroundColor: '#F3F0FF', alignItems: 'center', justifyContent: 'center',
-          borderWidth: 1.5, borderColor: '#C4B5FD', marginRight: 8,
+          width: 40, height: 40, borderRadius: 20,
+          backgroundColor: '#EDE9FE', alignItems: 'center', justifyContent: 'center',
+          borderWidth: 2, borderColor: '#A78BFA', marginRight: 10,
+          shadowColor: '#9333EA', shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.15, shadowRadius: 4,
         }}>
-          <Text style={{ fontSize: 14 }}>⏸</Text>
+          <Text style={{ fontSize: 18 }}>⏸</Text>
         </Pressable>
         {/* Scores */}
         <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -463,11 +467,14 @@ const TopHUD = memo(function TopHUD({
             <Text style={{ fontSize: 20, fontWeight: '900', color: '#1E1B4B' }}>{score.toLocaleString()}</Text>
           </View>
           <View style={{
-            backgroundColor: '#8B5CF6', borderRadius: 14,
-            paddingHorizontal: 12, paddingVertical: 4, alignItems: 'center',
+            backgroundColor: '#9333EA', borderRadius: 16,
+            paddingHorizontal: 14, paddingVertical: 6, alignItems: 'center',
+            borderWidth: 2, borderColor: '#D084FF',
+            shadowColor: '#9333EA', shadowOffset: { width: 0, height: 3 },
+            shadowOpacity: 0.4, shadowRadius: 6,
           }}>
-            <Text style={{ color: '#fff', fontSize: 9, fontWeight: '700' }}>LV</Text>
-            <Text style={{ color: '#fff', fontSize: 17, fontWeight: '900', lineHeight: 18 }}>{level}</Text>
+            <Text style={{ color: '#fff', fontSize: 9, fontWeight: '800', letterSpacing: 0.5 }}>LV</Text>
+            <Text style={{ color: '#fff', fontSize: 19, fontWeight: '900', lineHeight: 20 }}>{level}</Text>
           </View>
           <View style={{ alignItems: 'center' }}>
             <Text style={{ fontSize: 9, color: '#F59E0B', fontWeight: '800', letterSpacing: 0.8 }}>BEST</Text>
@@ -487,12 +494,16 @@ const TopHUD = memo(function TopHUD({
         </View>
       </View>
       {/* Progress bar */}
-      <View style={{ height: 7, backgroundColor: '#EDE9FE', borderRadius: 4, overflow: 'hidden' }}>
+      <View style={{ height: 9, backgroundColor: '#EDE9FE', borderRadius: 5, overflow: 'hidden', borderWidth: 1.5, borderColor: '#D084FF' }}>
         <View style={{
           position: 'absolute', left: 0, top: 0, bottom: 0,
           width: `${progress * 100}%`,
-          backgroundColor: progress >= 1 ? '#22C55E' : '#8B5CF6',
-          borderRadius: 4,
+          backgroundColor: progress >= 1 ? '#10B981' : '#A855F7',
+          borderRadius: 5,
+          shadowColor: progress >= 1 ? '#10B981' : '#A855F7',
+          shadowOffset: { width: 0, height: 0 },
+          shadowOpacity: 0.6,
+          shadowRadius: 4,
         }} />
       </View>
       <Text style={{ fontSize: 9, color: '#9CA3AF', textAlign: 'right', marginTop: 2, fontWeight: '600' }}>
@@ -511,22 +522,24 @@ const NextPreviewPanel = memo(function NextPreviewPanel({ level, nextNextLevel }
   }, [level, appear]);
   return (
     <View style={{
-      backgroundColor: 'rgba(255,255,255,0.92)',
-      borderRadius: 16, padding: 8, alignItems: 'center', minWidth: 66,
-      borderWidth: 2, borderColor: def.borderColor,
-      shadowColor: def.color, shadowOffset: { width: 0, height: 3 },
-      shadowOpacity: 0.25, shadowRadius: 8,
+      backgroundColor: 'rgba(255,255,255,0.96)',
+      borderRadius: 20, padding: 12, alignItems: 'center', minWidth: 76,
+      borderWidth: 2.5, borderColor: def.borderColor,
+      shadowColor: def.color, shadowOffset: { width: 0, height: 6 },
+      shadowOpacity: 0.35, shadowRadius: 12,
     }}>
-      <Text style={{ fontSize: 9, color: '#8B5CF6', fontWeight: '800', letterSpacing: 0.5 }}>NEXT</Text>
+      <Text style={{ fontSize: 10, color: '#9333EA', fontWeight: '900', letterSpacing: 0.6 }}>NEXT</Text>
       <Animated.View style={{
-        width: 50, height: 50, borderRadius: 25,
-        backgroundColor: def.bgColor, borderWidth: 2, borderColor: def.borderColor,
-        alignItems: 'center', justifyContent: 'center', marginVertical: 4,
+        width: 56, height: 56, borderRadius: 28,
+        backgroundColor: def.bgColor, borderWidth: 2.5, borderColor: def.borderColor,
+        alignItems: 'center', justifyContent: 'center', marginVertical: 6,
         transform: [{ scale: appear }],
+        shadowColor: def.color, shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.4, shadowRadius: 8,
       }}>
-        <Text style={{ fontSize: 24 }}>{def.emoji}</Text>
+        <Text style={{ fontSize: 28 }}>{def.emoji}</Text>
       </Animated.View>
-      <Text style={{ fontSize: 9, color: '#374151', fontWeight: '700' }} numberOfLines={1}>{def.name}</Text>
+      <Text style={{ fontSize: 10, color: '#1F2937', fontWeight: '800', textAlign: 'center' }} numberOfLines={1}>{def.name}</Text>
       {nextNextLevel && (
         <View style={{ marginTop: 4, alignItems: 'center' }}>
           <Text style={{ fontSize: 8, color: '#9CA3AF' }}>then</Text>
@@ -561,21 +574,27 @@ const BoosterBtn = memo(function BoosterBtn({ emoji, label, count, color, bgColo
   return (
     <Pressable onPress={press} style={{ flex: 1, alignItems: 'center' }}>
       <Animated.View style={{
-        backgroundColor: count === 0 ? '#F3F4F6' : bgColor,
-        borderRadius: 14, paddingVertical: 8,
-        borderWidth: 2, borderColor: count === 0 ? '#E5E7EB' : color,
-        opacity: count === 0 ? 0.5 : 1,
+        backgroundColor: count === 0 ? '#F0F0F0' : bgColor,
+        borderRadius: 16, paddingVertical: 10,
+        borderWidth: 2.5, borderColor: count === 0 ? '#D0D0D0' : color,
+        opacity: count === 0 ? 0.6 : 1,
         alignItems: 'center', width: '100%',
         transform: [{ scale }],
+        shadowColor: count === 0 ? '#000' : color,
+        shadowOffset: { width: 0, height: count === 0 ? 1 : 4 },
+        shadowOpacity: count === 0 ? 0.05 : 0.3,
+        shadowRadius: count === 0 ? 2 : 8,
       }}>
         {count > 0 && (
           <View style={{
-            position: 'absolute', top: -7, right: -7,
-            backgroundColor: color, borderRadius: 9, width: 18, height: 18,
+            position: 'absolute', top: -8, right: -8,
+            backgroundColor: color, borderRadius: 11, width: 22, height: 22,
             alignItems: 'center', justifyContent: 'center',
-            borderWidth: 2, borderColor: '#fff',
+            borderWidth: 2.5, borderColor: '#fff',
+            shadowColor: color, shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.5, shadowRadius: 4,
           }}>
-            <Text style={{ color: '#fff', fontSize: 9, fontWeight: '900' }}>{count}</Text>
+            <Text style={{ color: '#fff', fontSize: 10, fontWeight: '900' }}>{count}</Text>
           </View>
         )}
         <Text style={{ fontSize: 22 }}>{emoji}</Text>
@@ -992,24 +1011,25 @@ export default function GameScreen() {
             transform: [{ translateX: shakeXY.x }, { translateY: shakeXY.y }],
           }}>
             <View style={{
-              backgroundColor: '#7A4E22',
-              borderRadius: 22,
+              backgroundColor: '#8B6F47',
+              borderRadius: 28,
               padding: BOARD_PADDING,
-              shadowColor: '#3D2409',
-              shadowOffset: { width: 0, height: 8 },
-              shadowOpacity: 0.55,
-              shadowRadius: 14,
-              borderWidth: 3.5,
-              borderColor: '#4E2E0A',
+              shadowColor: '#000000',
+              shadowOffset: { width: 0, height: 12 },
+              shadowOpacity: 0.6,
+              shadowRadius: 18,
+              borderWidth: 4, borderColor: '#6B5230',
             }}>
-              {/* Wooden top rail with dragon preview */}
+              {/* Premium drop zone with gradient effect */}
               <View style={{
                 height: DROP_ZONE_H,
-                backgroundColor: '#A0672F',
-                borderRadius: 14,
-                marginBottom: 4,
+                backgroundColor: '#C9A876',
+                borderRadius: 16,
+                marginBottom: 6,
                 overflow: 'visible',
-                borderWidth: 1.5, borderColor: '#7A4E22',
+                borderWidth: 2, borderColor: '#8B6F47',
+                shadowColor: '#000', shadowOffset: { width: 0, height: 3 },
+                shadowOpacity: 0.15, shadowRadius: 6,
               }}>
                 {/* Wood grain lines */}
                 {[14, 32, 50].map(y => (
@@ -1051,22 +1071,22 @@ export default function GameScreen() {
                 style={{
                   width: BOARD_W,
                   height: BOARD_H,
-                  backgroundColor: '#E8F8FF',
-                  borderRadius: 12,
+                  backgroundColor: '#F0FAFF',
+                  borderRadius: 14,
                   overflow: 'hidden',
-                  borderWidth: 1.5, borderColor: '#BAD8F0',
+                  borderWidth: 2, borderColor: '#A0D8FF',
                 }}
               >
                 {/* Inner glow at top */}
                 <View style={{
-                  position: 'absolute', top: 0, left: 0, right: 0, height: 60,
-                  backgroundColor: 'rgba(200,240,255,0.4)',
+                  position: 'absolute', top: 0, left: 0, right: 0, height: 80,
+                  backgroundColor: 'rgba(200,235,255,0.5)',
                 }} />
-                {/* Grid hint lines */}
+                {/* Subtle grid hint lines */}
                 {[80, 160, 240, 320, 400].map(yy => (
                   <View key={yy} style={{
-                    position: 'absolute', left: 0, right: 0, top: yy, height: 1,
-                    backgroundColor: 'rgba(100,170,220,0.08)',
+                    position: 'absolute', left: 0, right: 0, top: yy, height: 1.5,
+                    backgroundColor: 'rgba(100,170,220,0.06)',
                   }} />
                 ))}
 

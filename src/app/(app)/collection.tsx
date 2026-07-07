@@ -26,34 +26,34 @@ function DragonCard({ dragon, unlocked }: { dragon: typeof DRAGON_LEVELS[0]; unl
 
   return (
     <Animated.View style={{
-      flex: 1, margin: 6,
-      backgroundColor: unlocked ? '#fff' : 'rgba(255,255,255,0.5)',
-      borderRadius: 20, padding: 14, alignItems: 'center',
+      flex: 1, margin: 8,
+      backgroundColor: unlocked ? '#FFFFFF' : 'rgba(255,255,255,0.6)',
+      borderRadius: 24, padding: 16, alignItems: 'center',
       borderWidth: 2.5,
       borderColor: unlocked ? dragon.borderColor : '#E5E7EB',
       shadowColor: unlocked ? dragon.color : '#000',
-      shadowOffset: { width: 0, height: 3 }, shadowOpacity: unlocked ? 0.2 : 0.05, shadowRadius: 6,
+      shadowOffset: { width: 0, height: 4 }, shadowOpacity: unlocked ? 0.25 : 0.08, shadowRadius: 8,
       transform: [{ translateY: bounce }],
     }}>
       {/* Dragon circle */}
       <View style={{
-        width: 64, height: 64, borderRadius: 32,
+        width: 72, height: 72, borderRadius: 36,
         backgroundColor: unlocked ? dragon.bgColor : '#F3F4F6',
-        borderWidth: 2.5, borderColor: unlocked ? dragon.borderColor : '#E5E7EB',
-        alignItems: 'center', justifyContent: 'center', marginBottom: 8,
+        borderWidth: 3, borderColor: unlocked ? dragon.borderColor : '#E5E7EB',
+        alignItems: 'center', justifyContent: 'center', marginBottom: 10,
         shadowColor: dragon.glowColor, shadowOffset: { width: 0, height: 0 },
-        shadowOpacity: unlocked ? 0.8 : 0, shadowRadius: 10,
+        shadowOpacity: unlocked ? 0.9 : 0, shadowRadius: 12,
       }}>
         {unlocked
-          ? <Text style={{ fontSize: 30 }}>{dragon.emoji}</Text>
-          : <Text style={{ fontSize: 28, opacity: 0.4 }}>❓</Text>
+          ? <Text style={{ fontSize: 34 }}>{dragon.emoji}</Text>
+          : <Text style={{ fontSize: 30, opacity: 0.35 }}>❓</Text>
         }
       </View>
 
       {/* Name */}
       <Text style={{
-        fontWeight: '900', fontSize: 13, color: unlocked ? '#1E1B4B' : '#9CA3AF',
-        textAlign: 'center', marginBottom: 4,
+        fontWeight: '900', fontSize: 14, color: unlocked ? '#1E1B4B' : '#9CA3AF',
+        textAlign: 'center', marginBottom: 6, letterSpacing: 0.2,
       }}>
         {unlocked ? dragon.name : '???'}
       </Text>
@@ -94,8 +94,8 @@ export default function CollectionScreen() {
   const filtered = DRAGON_LEVELS.filter(d => filter === 'all' || d.rarity === filter);
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#F5F3FF' }}>
-      <StatusBar style="dark" backgroundColor="#F5F3FF" />
+    <View style={{ flex: 1, backgroundColor: '#F9F7FF' }}>
+      <StatusBar style="dark" backgroundColor="#F9F7FF" />
       <SafeAreaView style={{ flex: 1 }} edges={['top', 'bottom']}>
         {/* Header */}
         <View style={{
@@ -103,18 +103,23 @@ export default function CollectionScreen() {
           paddingVertical: 12, gap: 10,
         }}>
           <Pressable onPress={() => router.back()} style={{
-            width: 36, height: 36, borderRadius: 18,
+            width: 40, height: 40, borderRadius: 20,
             backgroundColor: '#EDE9FE', alignItems: 'center', justifyContent: 'center',
-            borderWidth: 1.5, borderColor: '#C4B5FD',
+            borderWidth: 2, borderColor: '#A78BFA',
+            shadowColor: '#9333EA', shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.15, shadowRadius: 4,
           }}>
-            <Text style={{ fontSize: 16 }}>←</Text>
+            <Text style={{ fontSize: 18, fontWeight: '800' }}>←</Text>
           </Pressable>
-          <Text style={{ fontSize: 22, fontWeight: '900', color: '#1E1B4B', flex: 1 }}>📚 Dragon Book</Text>
+          <Text style={{ fontSize: 24, fontWeight: '900', color: '#1E1B4B', flex: 1, letterSpacing: 0.3 }}>📚 Dragon Book</Text>
           <View style={{
-            backgroundColor: '#EDE9FE', borderRadius: 12,
-            paddingHorizontal: 10, paddingVertical: 4,
+            backgroundColor: '#9333EA', borderRadius: 14,
+            paddingHorizontal: 12, paddingVertical: 6,
+            borderWidth: 2, borderColor: '#D084FF',
+            shadowColor: '#9333EA', shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.3, shadowRadius: 6,
           }}>
-            <Text style={{ color: '#5B21B6', fontWeight: '800', fontSize: 13 }}>
+            <Text style={{ color: '#FFFFFF', fontWeight: '900', fontSize: 14, letterSpacing: 0.5 }}>
               {UNLOCKED_LEVELS.length}/{DRAGON_LEVELS.length}
             </Text>
           </View>
@@ -135,11 +140,15 @@ export default function CollectionScreen() {
                 onPress={() => setFilter(r)}
                 style={{
                   backgroundColor: active ? conf.color : conf.bg,
-                  borderRadius: 16, paddingHorizontal: 14, paddingVertical: 6,
-                  borderWidth: 2, borderColor: conf.color,
+                  borderRadius: 18, paddingHorizontal: 16, paddingVertical: 8,
+                  borderWidth: 2.5, borderColor: conf.color,
+                  shadowColor: active ? conf.color : '#000',
+                  shadowOffset: { width: 0, height: active ? 3 : 1 },
+                  shadowOpacity: active ? 0.3 : 0.08,
+                  shadowRadius: active ? 8 : 2,
                 }}
               >
-                <Text style={{ color: active ? '#fff' : conf.color, fontWeight: '800', fontSize: 12 }}>
+                <Text style={{ color: active ? '#fff' : conf.color, fontWeight: '900', fontSize: 13, letterSpacing: 0.3 }}>
                   {r.charAt(0).toUpperCase() + r.slice(1)}
                 </Text>
               </Pressable>

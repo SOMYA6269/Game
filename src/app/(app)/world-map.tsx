@@ -46,12 +46,14 @@ export default function WorldMapScreen() {
           paddingVertical: 12, gap: 10,
         }}>
           <Pressable onPress={() => router.back()} style={{
-            width: 36, height: 36, borderRadius: 18, backgroundColor: 'rgba(255,255,255,0.8)',
-            alignItems: 'center', justifyContent: 'center', borderWidth: 1.5, borderColor: '#C4B5FD',
+            width: 40, height: 40, borderRadius: 20, backgroundColor: '#EDE9FE',
+            alignItems: 'center', justifyContent: 'center', borderWidth: 2, borderColor: '#A78BFA',
+            shadowColor: '#9333EA', shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.15, shadowRadius: 4,
           }}>
-            <Text style={{ fontSize: 16 }}>←</Text>
+            <Text style={{ fontSize: 18, fontWeight: '800' }}>←</Text>
           </Pressable>
-          <Text style={{ fontSize: 22, fontWeight: '900', color: '#1E1B4B', flex: 1 }}>🗺️ World Map</Text>
+          <Text style={{ fontSize: 24, fontWeight: '900', color: '#1E1B4B', flex: 1, letterSpacing: 0.3 }}>🗺️ World Map</Text>
           <Text style={{ fontSize: 22 }}>🏆</Text>
         </View>
 
@@ -61,35 +63,38 @@ export default function WorldMapScreen() {
               <Pressable
                 onPress={() => !level.locked && router.push('/(app)/game' as never)}
                 style={{
-                  backgroundColor: level.locked ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.92)',
-                  borderRadius: 22, padding: 16,
-                  flexDirection: 'row', alignItems: 'center', gap: 14,
-                  borderWidth: 2.5,
+                  backgroundColor: level.locked ? 'rgba(255,255,255,0.4)' : 'rgba(255,255,255,0.95)',
+                  borderRadius: 24, padding: 18,
+                  flexDirection: 'row', alignItems: 'center', gap: 16,
+                  borderWidth: 3,
                   borderColor: level.locked ? '#D1D5DB' : level.bgFrom,
                   shadowColor: level.locked ? '#000' : level.bgFrom,
-                  shadowOffset: { width: 0, height: 3 },
-                  shadowOpacity: level.locked ? 0.05 : 0.25,
-                  shadowRadius: 8,
-                  opacity: level.locked ? 0.65 : 1,
+                  shadowOffset: { width: 0, height: 6 },
+                  shadowOpacity: level.locked ? 0.08 : 0.3,
+                  shadowRadius: 12,
+                  opacity: level.locked ? 0.6 : 1,
                 }}
               >
                 {/* Kingdom icon */}
                 <View style={{
-                  width: 60, height: 60, borderRadius: 30,
-                  backgroundColor: level.bgFrom + '33',
-                  borderWidth: 2.5, borderColor: level.bgFrom,
+                  width: 68, height: 68, borderRadius: 34,
+                  backgroundColor: level.bgFrom + '22',
+                  borderWidth: 3, borderColor: level.bgFrom,
                   alignItems: 'center', justifyContent: 'center',
+                  shadowColor: level.bgFrom, shadowOffset: { width: 0, height: 0 },
+                  shadowOpacity: 0.5, shadowRadius: 8,
                 }}>
-                  <Text style={{ fontSize: 30 }}>{level.emoji}</Text>
+                  <Text style={{ fontSize: 34 }}>{level.emoji}</Text>
                 </View>
 
                 {/* Info */}
                 <View style={{ flex: 1 }}>
                   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 3 }}>
-                    <Text style={{
-                      fontSize: 16, fontWeight: '900',
-                      color: level.locked ? '#9CA3AF' : '#1E1B4B',
-                    }}>{level.name}</Text>
+                  <Text style={{
+                    fontSize: 17, fontWeight: '900',
+                    color: level.locked ? '#9CA3AF' : '#1E1B4B',
+                    letterSpacing: 0.3,
+                  }}>{level.name}</Text>
                     {level.locked && <Text style={{ fontSize: 14 }}>🔒</Text>}
                   </View>
                   <StarRow stars={level.stars} />
@@ -107,11 +112,16 @@ export default function WorldMapScreen() {
 
                 {/* Action */}
                 <View style={{
-                  width: 44, height: 44, borderRadius: 22,
+                  width: 52, height: 52, borderRadius: 26,
                   backgroundColor: level.locked ? '#F3F4F6' : level.bgFrom,
                   alignItems: 'center', justifyContent: 'center',
+                  borderWidth: 2, borderColor: level.locked ? '#E5E7EB' : level.bgFrom,
+                  shadowColor: level.bgFrom,
+                  shadowOffset: { width: 0, height: 3 },
+                  shadowOpacity: level.locked ? 0 : 0.4,
+                  shadowRadius: 8,
                 }}>
-                  <Text style={{ fontSize: 18 }}>{level.locked ? '🔒' : '▶️'}</Text>
+                  <Text style={{ fontSize: 20 }}>{level.locked ? '🔒' : '▶️'}</Text>
                 </View>
 
                 {/* Level number badge */}
