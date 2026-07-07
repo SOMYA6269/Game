@@ -1,0 +1,1387 @@
+
+<action>
+**MessageAction** (source=EventSource.AGENT)
+CONTENT: 
+</action>
+<action>
+**RecallAction**
+QUERY: Generate App
+</action>
+<action>
+**MessageAction** (source=EventSource.AGENT)
+CONTENT: Sure! I'll create an app based on your requirements, including multiple features and corresponding pages. I'll start by setting up the app framework according to the requirements document and outlining the overall implementation plan, then execute the tasks step by step.
+</action>
+<action>
+**MCPAction**
+NAME: generate_start
+ARGUMENTS: {'appId': 'app-cuhcy5wjz3lt', 'userId': 'user-cqrbqbt621vk', 'requirementType': 'Mobile App', 'hasAgent': False, 'hasCodeTemplate': 'NONE', 'codeTemplateZipUrl': '', 'isBoilerplate': False, 'isFirstGeneration': True, 'use_supabase': False}
+</action>
+<observation>
+**MCPObservation**
+NAME: generate_start
+RESULTS: {"code":0,"message":"success"}
+</observation>
+<action>
+**MCPAction**
+NAME: aesthetic_template
+ARGUMENTS: {'input': 'Minimal - Prioritizing a sense of airiness, it establishes information hierarchy through ample whitespace and clear distinctions in font size, weight, and spacing. The design remains extremely restrained, with almost no use of shadows or decorative colors, while ensuring long-term reading comfort through gentle contrast and fine, non-sharp typefaces.', 'appId': 'app-cuhcy5wjz3lt', 'userId': 'user-cqrbqbt621vk', 'appType': 'Mobile App', 'prd': '# Requirements Document\n\n## 1. Application Overview\n\n**Application Name**: Cute Dragon Merge Kingdom\n\n**Description**: A premium mobile puzzle game featuring physics-based drop and merge gameplay with cute original dragon characters. Players drop magical dragon eggs from the top, merge identical eggs into baby dragons, and continue merging to create larger dragons. The game features smooth physics, satisfying merge effects, and a Disney/Pixar-inspired art style with 100% original artwork.\n\n**Platform**: Mobile App (React Native + Expo)\n\n**Orientation**: Portrait 9:16\n\n**Reference Image**: https://miaoda-conversation-file.s3cdn.medo.dev/user-cqrbqbt621vk/app-cuhcy5wjz3lt/20260707/1000090006.png (for layout reference only)\n\n---\n\n## 2. Target Users and Usage Scenarios\n\n**Target Users**:\n- Casual mobile game players\n- Puzzle game enthusiasts\n- Players who enjoy merge mechanics\n- Fans of cute cartoon art style\n\n**Core Usage Scenarios**:\n- Playing quick puzzle sessions during breaks\n- Collecting and evolving dragon characters\n- Progressing through world map levels\n- Using boosters to achieve higher scores\n\n---\n\n## 3. Screen Structure and Functionality\n\n### Screen Hierarchy\n\n```\nCute Dragon Merge Kingdom\n├── Main Game Screen\n├── Collection Book Screen\n├── World Map Screen\n├── Daily Rewards Screen\n├── Shop Screen\n├── Settings Screen\n├── Level Complete Screen\n├── Unlock Animation Screen\n└── Character Evolution Tree Screen\n```\n\n### 3.1 Main Game Screen\n\n**Layout Elements**:\n- Large premium wooden game container in center\n- White dotted aiming line from top\n- Next character preview card\n- Large score panel centered at top\n- Coin counter\n- Gem counter\n- Pause button\n- Settings button\n- Bottom booster toolbar with 4 buttons\n\n**Core Gameplay**:\n- Drop magical dragon eggs from the top of the game board\n- Eggs fall with physics-based bouncing behavior\n- When two identical eggs touch, they merge into a baby dragon\n- When two identical dragons touch, they merge into a larger dragon\n- Merged objects trigger explosion effects with combo animations and soft particle effects\n- Game board is a dark purple play area within wooden frame\n- Physics objects interact with smooth squash and stretch animations\n- Glowing merge effects and sparkles appear during merges\n\n**UI Components**:\n- Score panel displays current score\n- Coin counter shows available coins\n- Gem counter shows available gems\n- Next character preview shows upcoming egg/dragon to drop\n- Aiming line helps player position drop location\n- Pause button pauses gameplay\n- Settings button opens Settings Screen\n\n**Bottom Booster Toolbar**:\n- Undo button (with count badge showing remaining uses)\n- Shake button (with count badge showing remaining uses)\n- Bomb button (with count badge showing remaining uses)\n- Magnet button (with count badge showing remaining uses)\n\n**Character Types** (100% original dragons):\n- Green dragon\n- Blue dragon\n- Purple dragon\n- Red dragon\n- Golden dragon\n- Pink dragon\n- Each dragon has unique horns, wings, eyes, and expressions\n\n**Art Style Elements**:\n- Disney/Pixar-inspired quality with 100% original artwork\n- Bright fantasy world background\n- Cute baby dragons\n- Magical eggs\n- Soft lighting\n- Pastel backgrounds\n- Floating islands\n- Castle scenery\n- Clouds\n- Nature elements\n- Happy atmosphere\n\n**UI Style**:\n- AAA mobile casual game quality\n- Rounded glossy buttons\n- Soft shadows\n- Modern gradients\n- Cute cartoon icons\n- High readability\n- Premium spacing\n- Professional mobile UX\n\n### 3.2 Collection Book Screen\n\n**Functionality**:\n- Display all dragon characters in the game\n- Show locked and unlocked dragons\n- Display dragon evolution stages\n- Show dragon details when tapped\n\n### 3.3 World Map Screen\n\n**Functionality**:\n- Display game levels in a map format\n- Show completed and locked levels\n- Allow player to select available levels\n- Display level progress\n\n### 3.4 Daily Rewards Screen\n\n**Functionality**:\n- Display daily login rewards\n- Show reward calendar\n- Allow player to claim daily rewards\n- Display reward items (coins, gems, boosters)\n\n### 3.5 Shop Screen\n\n**Functionality**:\n- Display purchasable items\n- Show coin packs\n- Show gem packs\n- Show booster packs\n- Allow player to purchase items\n- Display prices\n\n### 3.6 Settings Screen\n\n**Functionality**:\n- Adjust sound volume\n- Adjust music volume\n- Toggle notifications\n- View game version\n- Access help/tutorial\n- Logout option\n\n### 3.7 Level Complete Screen\n\n**Functionality**:\n- Display final score\n- Show coins earned\n- Show gems earned\n- Display star rating\n- Show next level button\n- Show replay button\n- Show return to map button\n\n### 3.8 Unlock Animation Screen\n\n**Functionality**:\n- Play animation when new dragon is unlocked\n- Display unlocked dragon character\n- Show dragon name and description\n- Show continue button\n\n### 3.9 Character Evolution Tree Screen\n\n**Functionality**:\n- Display dragon evolution paths\n- Show merge combinations\n- Display all evolution stages\n- Show locked and unlocked evolutions\n\n---\n\n## 4. Game Rules and Logic\n\n### Merge Mechanics\n- Two identical eggs merge into one baby dragon\n- Two identical baby dragons merge into one larger dragon\n- Merge progression follows evolution tree\n- Each merge increases score\n- Consecutive merges trigger combo multipliers\n\n### Physics Behavior\n- Eggs and dragons fall with gravity\n- Objects bounce when hitting surfaces or other objects\n- Smooth physics simulation with squash and stretch effects\n- Objects settle naturally in the game board\n\n### Scoring System\n- Points awarded for each merge\n- Higher-level dragons award more points\n- Combo merges multiply score\n- Final score determines level completion rating\n\n### Booster Functions\n- Undo: Reverses last drop, consumes one use\n- Shake: Shakes game board to rearrange objects, consumes one use\n- Bomb: Removes selected object, consumes one use\n- Magnet: Attracts nearby identical objects, consumes one use\n- Each booster has limited uses shown in count badge\n\n### Level Progression\n- Complete levels to unlock new levels on World Map\n- Earn stars based on score achieved\n- Unlock new dragon types as player progresses\n\n### Currency System\n- Coins earned through gameplay\n- Gems earned through special achievements or purchases\n- Currencies used to purchase boosters and items in Shop\n\n---\n\n## 5. Edge Cases and Exceptions\n\n| Scenario | Handling |\n|----------|----------|\n| Game board is full | Game ends, show Level Complete Screen |\n| Booster count reaches zero | Booster button becomes disabled |\n| No valid merge available | Player can continue dropping or use boosters |\n| Player pauses during gameplay | Game state is saved, timer stops |\n| Player exits app during gameplay | Game state is saved, resume on return |\n| Network connection lost | Game continues offline, sync when reconnected |\n| Insufficient coins/gems for purchase | Display insufficient currency message |\n| Daily reward already claimed | Show next available reward time |\n\n---\n\n## 6. Acceptance Criteria\n\n1. Launch app and view Main Game Screen with wooden game container, score panel, coin/gem counters, and bottom booster toolbar\n2. Drop a magical dragon egg from the top using the white dotted aiming line\n3. Drop another identical egg to trigger merge into baby dragon with explosion effect and particle animations\n4. Continue merging identical dragons to create larger dragons with smooth physics and glowing effects\n5. Use one booster from the bottom toolbar (Undo/Shake/Bomb/Magnet) and observe count badge decrease\n6. Fill the game board until no more drops are possible, triggering Level Complete Screen with final score and rewards\n\n---\n\n## 7. Out of Scope for This Release\n\n- Multiplayer or competitive modes\n- Social features (leaderboards, friend invites, sharing)\n- In-game chat or messaging\n- Video ads or rewarded video system\n- Cloud save synchronization across devices\n- Seasonal events or limited-time challenges\n- Character customization or skins\n- Background music composition (placeholder music acceptable)\n- Voice acting or sound effects recording (placeholder sounds acceptable)\n- Tutorial or onboarding flow\n- Achievement system\n- Push notifications\n- Analytics integration\n- Localization to other languages\n- Accessibility features (colorblind mode, screen reader support)\n- Performance optimization for low-end devices'}
+</action>
+<observation>
+**MCPObservation**
+NAME: aesthetic_template
+RESULTS: - Title: Minimal
+- Description: Prioritizing a sense of airiness, it establishes information hierarchy through ample whitespace and clear distinctions in font size, weight, and spacing. The design remains extremely restrained, with almost no use of shadows or decorative colors, while ensuring long‑term reading comfort through gentle contrast and fine, non‑sharp typefaces.
+- Context: # Theme Name: Minimal
+# Vibe & Description: Prioritizing a sense of airiness, it establishes information hierarchy through ample whitespace and clear distinctions in font size, weight, and spacing. The design remains extremely restrained, with almost no use of shadows or decorative colors, while ensuring long‑term reading comfort through gentle contrast and fine, non‑sharp typefaces.
+
+# Color
+- Primary Background: #FFFFFF;
+-Secondary Background: #F8F9FB → Use only extremely subtle color differences to distinguish layers.
+- Primary Text: #111827 (dark gray rather than pure black).
+- Secondary Text: #6B7280.
+- Border: #E5E7EB (1px).
+- Unique Signal Color (selectable based on user requirements): Used for selected states, primary buttons, and current status indicators.
+
+# Font
+- We recommend using "Montserrat" as the global font.
+
+## Font import method
+Extend src/index.css to register fonts.
+```css
+/* Montserrat */
+@font-face {
+  font-family: 'Montserrat';
+  src: url('https://resource-static.bj.bcebos.com/fonts/Montserrat-VariableFont_wght.woff2') format('woff2');
+  font-display: swap;
+}
+```
+Add the `fontFamily` property to `tailwind.config.js` to expand the font.
+```js
+{
+  fontFamily: {
+    'montserrat': ['Montserrat', 'sans-serif'],
+  }
+}
+```
+Use `--font-montserrat` via the `tailwind` class name.
+
+# Animation
+## Elemental animation
+-The animation is minimalist and linear. Elements slide into place along the grid lines;
+## Entrance animation
+- There is no bouncing or elasticity effect; the page scrolls naturally like a document with an ease-out effect.
+##Transition animation
+- Use a fade-in or slight displacement when loading content;
+##Animation implementation
+- The project integrates the tailwindcss-intersect plugin, which allows you to achieve animation effects when elements enter the viewport in a manner similar to the following:
+opacity-0 intersect:opacity-100 transition duration-700
+- Animations can also be achieved using motion/react.
+
+# Layout
+- Content is organized into clear modules. Ample white space is used to distinguish different sections.
+- Prefers left-aligned text and structured image layouts, avoiding decorative misalignments.
+
+# Elements
+- Prefers minimalist linear charts with uniform stroke thickness and no fill.
+- Shadow ≈ 0, border ≤ 1px, minimizes the button's visual impact; main button ≠ large color block, emphasizes text more.
+
+
+- Title: Dark
+- Description: Against a dark base, information density is intentionally reduced, using whitespace and rhythm to structure content. Hierarchy is built primarily through font size, weight, and spacing rather than ornamentation. The overall design is highly restrained, with almost no shadows or strokes, keeping the interface calm and visually durable in dark environments.
+- Context: # Theme Name: Dark
+# Vibe & Description: Against a dark base, information density is intentionally reduced, using whitespace and rhythm to structure content. Hierarchy is built primarily through font size, weight, and spacing rather than ornamentation. The overall design is highly restrained, with almost no shadows or strokes, keeping the interface calm and visually durable in dark environments.
+
+# Color
+""- Primary Background: #0B0F19;
+- Secondary Background / Cards: #0F172A.
+- Primary Text: #E5E7EB.
+-Secondary Text: #9CA3AF.
+-Border: #1F2937 (1px).
+- Unique Signal Color (selectable based on user requirements): Used for selected states, primary buttons, and current status indicators. → Should remain clear but not glaring in dark environments.
+
+# Font
+- We recommend using "Montserrat" as the global font.
+
+## Font import method
+Extend src/index.css to register fonts.
+```css
+/* Montserrat */
+@font-face {
+  font-family: 'Montserrat';
+  src: url('https://resource-static.bj.bcebos.com/fonts/Montserrat-VariableFont_wght.woff2') format('woff2');
+  font-display: swap;
+}
+```
+Add the `fontFamily` property to `tailwind.config.js` to expand the font.
+```js
+{
+  fontFamily: {
+    'montserrat': ['Montserrat', 'sans-serif'],
+  }
+}
+```
+Use by the tailwind class name-- font-montserrat
+
+# Animation
+## Elemental animation
+- The animation is minimalist and linear. Elements slide into place along the grid lines;
+##Entrance animation
+- There is no bouncing or elasticity effect; the page scrolls naturally like a document with an ease-out effect.
+## Transition animation
+- Use a fade-in or slight shift when loading content;
+## Animation implementation
+- The project integrates the tailwindcss-intersect plugin, which allows you to achieve animation effects when elements enter the viewport in a manner similar to the following:
+opacity-0 intersect:opacity-100 transition duration-700
+-Animations can also be achieved using motion/react.
+
+# Layout
+- Content is organized into clear modules. Ample white space is used to distinguish different sections.
+- Prefers left-aligned text and structured image layouts, avoiding decorative misalignments.
+
+# Elements
+- Prefers minimalist linear charts with uniform stroke thickness and no fill.
+- Shadow ≈ 0, border ≤ 1px, minimizes the button's visual impact; main button ≠ large color block, emphasizes text more.
+
+
+- Title: Macaron
+- Description: Featuring low contrast, a light and soft‑focus texture, pastel color palettes, and a style dominated by rounded corners and soft‑edged elements, layouts and transitions flow naturally like clouds.
+- Context: # Theme Name: Macaron
+# Vibe & Description: Featuring low contrast, a light and soft‑focus texture, pastel color palettes, and a style dominated by rounded corners and soft‑edged elements, layouts and transitions flow naturally like clouds.
+
+# Color
+- Primarily using pastel macaron colors—including mint green, sky blue, cotton candy pink, pearl purple, and other soft tones—maintain low overall contrast to create a tranquil atmosphere. Based on user needs, select one appropriate color as the primary color, then choose others as secondary, accent, etc.
+
+# Font
+-We recommend using "Nunito" as the global font.
+## Font import method
+Extend src/index.css to register fonts.
+```css
+/* Nunito */
+@font-face {
+  font-family: 'Nunito';
+  src: url('https://resource-static.bj.bcebos.com/fonts/Nunito-VariableFont_wght.woff2') format('woff2');
+  font-display: swap;
+}
+```
+tailwind.config.js add the fontFamily attribute to expand the font.
+```js
+{
+  fontFamily: {
+    'nunito': ['Nunito', 'sans-serif'],
+  }
+}
+```
+##Font import example
+Use by the tailwind class name -- font-nunito
+
+# Animation
+## Elemental animation
+- When the button is clicked, the element will bounce or float up slightly like a marshmallow, instead of changing color abruptly;
+- Key elements feature a slight up-and-down floating animation;
+## Interaction Emphasis
+## Entrance
+animate__slideInDown
+## Transition animation
+- Use a slow fade-in, and slow down all transition animations appropriately to guide users to slow down their breathing.
+## Animation implementation
+- The project integrates the tailwindcss-intersect plugin, which allows you to achieve animation effects when elements enter the viewport in a manner similar to the following:
+opacity-0 intersect:opacity-100 transition duration-700
+-Animations can also be achieved using motion/react.
+
+# Layout
+- The line spacing and paragraph spacing are relatively large, creating a soft feel.
+-Avoid rigid grids and adopt a free-flowing layout, like clouds scattered randomly in the sky.
+
+# Elements
+- Larger rounded corners (16-24px), very soft shadows.
+- Irregular rounded corners or CSS deformations are used to draw shapes.
+- Buttons and cards have a subtle glowing effect, using frosted glass and soft-focus backgrounds to create a dreamy atmosphere.
+- Elements slightly overlap, using depth (z-index) rather than borders to differentiate levels.
+- (When necessary) Prefer using image processing tools to generate large-area homepage backgrounds with abstract, soft textures.
+
+
+- Title: Editorial
+- Description: Magazine-like editorial design that prioritizes refined typesetting and a professional information hierarchy. Oversized headlines, elegant font layering, and generous whitespace create a strong reading rhythm. Content is structured with magazine-inspired grids and card layouts, anchored by high-contrast black-and-white tones and elevated with a restrained accent color. Delicate dividers, subtle shadows, and understated transitions add premium polish and improve readability.
+- Context: # Theme Name: Editorial
+
+# Vibe & Description: Magazine-like editorial design that prioritizes refined typesetting and a professional information hierarchy. Oversized headlines, elegant font layering, and generous whitespace create a strong reading rhythm. Content is structured with magazine-inspired grids and card layouts, anchored by high-contrast black-and-white tones and elevated with a restrained accent color. Delicate dividers, subtle shadows, and understated transitions add premium polish and improve readability.
+
+# Color
+:root {
+  --background: 0 0% 98%;
+  --foreground: 0 0% 7%;
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 7%;
+  --muted: 0 0% 95%;
+  --muted-foreground: 0 0% 33%;
+  --border: 0 0% 90%;
+  --primary: 0 0% 7%;
+  --primary-foreground: 0 0% 100%;
+  --accent: 354 64% 33%; /* deep red (#8B1E1E) - choose ONE accent */
+  --accent-foreground: 0 0% 100%;
+  --ring: 0 0% 7% / 0.25;
+  --radius: 12px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,.06);
+  --shadow-md: 0 10px 30px rgba(0,0,0,.10);
+  --tracking-tight: -0.02em;
+  --leading-body: 1.8;
+}
+.dark {
+  --background: 0 0% 6%;
+  --foreground: 0 0% 96%;
+  --card: 0 0% 9%;
+  --card-foreground: 0 0% 96%;
+  --muted: 0 0% 12%;
+  --muted-foreground: 0 0% 72%;
+  --border: 0 0% 18%;
+  --primary: 0 0% 96%;
+  --primary-foreground: 0 0% 6%;
+  --accent: 43 59% 44%; /* muted gold (#B08A2E) - optional in dark */
+  --accent-foreground: 0 0% 6%;
+  --ring: 0 0% 96% / 0.18;
+  --radius: 12px;
+}
+- Title: Recommendation: Use a serif font with humanistic characteristics, such as "Playfair Display".
+- Body text: Do not modify, use the default font.
+## Font import method
+Extend src/index.css to register fonts.
+```css
+/* Playfair Display */
+@font-face {
+  font-family: 'PlayfairDisplay';
+  src: url('https://resource-static.cdn.bcebos.com/fonts/Playfair_Display.woff2') format('woff2');
+  font-display: swap;
+}
+```
+tailwind.config.js add fontFamily attribute extended font
+```js
+{
+  fontFamily: {
+    'playfair-display': ['PlayfairDisplay', 'serif'],
+  }
+}
+```
+
+##Font import example
+Use by the tailwind class name -- font-playfair-display
+
+# Animation
+## Element Animation
+- Buttons slowly lift on hover (ease-out);
+- Images slowly zoom within their container on hover, rather than changing abruptly.
+## Transition Animation
+- When scrolling down, create a relaxed, unhurried scrolling experience. Elements fade in and float upward as they enter the viewport.
+
+# Layout
+- Prefer asymmetry within structure: allow certain modules (hero image, quote block) to break the grid for editorial impact.
+- Use a magazine-like grid as the backbone: clean alignment and generous whitespace.
+
+# Elements
+- Masthead / Header: magazine title, issue-style navigation, subtle separators;
+- Cover Hero: oversized headline, deck (lead paragraph), author/date/reading time metadata.
+
+
+
+- Title: Notebook
+- Description: Handwritten typography, monochromatic textures, and a grayscale palette, with a strong emphasis on typographic hierarchy to emulate a notebook-like feel.
+- Context: # Theme Name: Notebook
+# Vibe & Description: Handwritten typography, monochromatic textures, and a grayscale palette, with a strong emphasis on typographic hierarchy to emulate a notebook-like feel.
+
+# Color
+- Strict color restriction: only pure black, dark gray, light gray, and paper white are used.
+- Simulate the effect of "pencil on white paper". The background uses an extremely pale textured white (#FDFBF7 or pure white with noise), text uses graphite gray (#333333), and accent color uses deep charcoal black (#000000). This color scheme conveys emotions of focus, purity, and rationality.
+
+# Font
+- Use 「YangRenDongZhuShiTi-Semibold」 as the heading font.
+- Use 「YangRenDongZhuShiTi-Regular」 as the body text font.
+
+Extend src/index.css to register the fonts
+/* YangRenDongZhuShiTi-Semibold */
+@font-face {
+  font-family: 'YangRenDongZhuShiTi-Semibold';
+  src: url('https://resource-static.bj.bcebos.com/fonts/YangRenDongZhuShiTi-Semibold.woff2') format('woff2');
+  font-display: swap;
+}
+Add fontFamily property in tailwind.config.js to extend the font
+{
+  fontFamily: {
+    'yang-ren-dong-zhu-shi-ti-semibold': ['YangRenDongZhuShiTi-Semibold', 'sans-serif'],
+  }
+}
+Use via tailwind class name -- font-yang-ren-dong-zhu-shi-ti-semibold
+/* YangRenDongZhuShiTi-Regular */
+@font-face {
+font-family: 'YangRenDongZhuShiTi-Regular';
+src: url('https://resource-static.bj.bcebos.com/fonts/YangRenDongZhuShiTi-Regular.woff2') format('woff2');
+font-display: swap;
+}
+plaintext
+Add fontFamily property in tailwind.config.js to extend the font
+```js
+{
+  fontFamily: {
+    'yang-ren-dong-zhu-shi-ti-regular': ['YangRenDongZhuShiTi-Regular', 'sans-serif'],
+  }
+}
+Use via tailwind class name -- font-yang-ren-dong-zhu-shi-ti-regular
+
+
+# Animation
+- On mouse hover, elements have a slight "floating" effect or line redrawing effect, as if the stroke is deepening. On click, there is a "pressing the paper" feedback.
+- When elements appear, adopt "writing" animation (Stroke animation) or "fade-in + slight displacement" to simulate the process of writing text on paper.
+
+# Layout
+- Elements appear as if collaged or written casually on paper, with slight misalignment and rotation (1-2 degrees) to enhance realism. Use a left-side "binding line" or top "spiral coil" as a visual anchor, while maintaining freedom in the main page area.
+- The page layout is loose, simulating a casual yet organized note-taking habit.
+
+# Elements
+- Buttons and cards use SVG filters or CSS border-image to simulate hand-drawn lines.
+- Correction marks: When emphasizing text or links, use effects similar to a gray highlighter or doodled underline.
+- Paper texture: Overlay a faint paper texture noise on the background (using raw images or image search tools).
+- All borders and dividers simulate the natural jitter of hand-drawing (Rough.js style).
+
+
+- Title: Blueprint
+- Description: Relying on the strong contrast between deep blue blocks and pure white lines to ensure readability and visual impact, it incorporates technical annotations, dimension lines, and other elements as decorative features. All elements are strictly aligned using a visible, precise grid system that explicitly reveals the UI “skeleton,” showcasing beauty through functionality and clarity.
+
+- Context: # Theme Name: Blueprint
+# Vibe & Description: Relying on the strong contrast between deep blue blocks and pure white lines to ensure readability and visual impact, it incorporates technical annotations, dimension lines, and other elements as decorative features. All elements are strictly aligned using a visible, precise grid system that explicitly reveals the UI “skeleton,” showcasing beauty through functionality and clarity.
+
+# Color
+- Base Color: Engineering deep blue (#0D47A1)—symbolizing stability and reliability.(Do not use this color for large-area background; it may only be used within small color blocks.)
+- Line Color: Pure white (#FFFFFF) or grid cyan-blue (#2962FF), with opacity variations to distinguish layers:
+    * Content：100%
+    * Grid：30%
+- Disruption Color: Safety orange (#FF5722) or warning yellow (#FFC107), used for CTAs, echoing construction safety color schemes.
+
+
+# Font
+- Title: We recommend using "Coda" as the title font.
+- Body text: We recommend using "Source Han Mono SC" as the title font.
+
+## Font import method
+Extend src/index.css to register fonts.
+```css
+/* Coda */
+@font-face {
+  font-family: 'Coda';
+  src: url('https://resource-static.bj.bcebos.com/fonts/Coda-Regular.woff2') format('woff2');
+  font-display: swap;
+}
+```
+tailwind.config.js add the fontFamily attribute to expand the font.
+```js
+{
+  fontFamily: {
+    'coda': ['Coda', 'serif'],
+  }
+}
+```
+Use by the tailwind class name -- font-coda
+
+/* Source Han Mono SC */
+@font-face {
+  font-family: 'Source Han Mono SC';
+  src: url('https://resource-static.cdn.bcebos.com/fonts/SourceHanMonoSC-Regular.woff2') format('woff2');
+  font-display: swap;
+}
+```
+tailwind.config.js add the fontFamily attribute to expand the font.
+```js
+{
+  fontFamily: {
+    'source-han-mono-sc': ['Source Han Mono SC', 'monospace'],
+  }
+}
+```
+Use by the tailwind class name -- font-source-han-mono-sc
+
+
+# Animation
+## Elemental animation
+- Hover feedback is immediate and abrupt, with no easing effect.
+- Interacting with elements feels like being """"locked to a grid.""""
+- There's a typewriter effect; text appears character by character.
+- The cursor and indicator blink at a steady, mechanical frequency.
+##Animation implementation
+- The project integrates the tailwindcss-intersect plugin, which allows you to achieve animation effects when elements enter the viewport in a manner similar to the following:
+opacity-0 intersect:opacity-100 transition duration-700
+- Animations can also be achieved using motion/react.
+
+# Layout
+- Employ a modular grid where the page is divided into clear quadrants and zones with visible 1px lines.
+- Use asymmetrical balance—elements can span grid lines. Content often aligns to the bottom or corners, leaving negative space for """"""""annotations"""""""" and """"""""dimension markers.
+
+# Elements
+- Mouse interaction triggers crosshairs; page edges feature scale markers.
+- Use small, monospaced text labels for areas (e.g., “FIG 1.1”, “SCALE 1:100”).
+- Dashed lines for secondary information or connecting related elements.
+- UI elements resemble technical modules or CAD blocks, with visible borders and corner markers.
+-Raw image tools may be used to generate technical/engineering drawing-style illustrations.
+
+
+
+- Title: Punchy 
+- Description: Brutalist-style black background, paired with oversized, compact white typography and red accent lines.
+- Context: # Theme Name: Punchy 
+# Vibe & Description: Brutalist-style black background, paired with oversized, compact white typography and red accent lines.
+
+# Color
+- Void Black (#000000): Used for backgrounds and visual effect canvases, resembling an endless void.
+- Warning Red (#FF1F1F): Applied to borders, dividers, some emphatic text, and call-to-action buttons, delivering maximum visual impact and strongly capturing attention.
+- Crisp White (#FFFFFF): Exclusively used for typography, achieving optimal readability against the black base.
+
+# Font
+- Use "Douyin Sans Bold" as the title font.
+- Use "Source Han Mono SC" as the title font.
+- Except for the most important headings, all other font sizes are set to normal.
+
+Font setup:
+Extend src/index.css to register fonts:
+/* Douyin Sans Bold */
+@font-face {
+  font-family: 'DouyinSansBold';
+  src: url(﻿'https://resource-static.cdn.bcebos.com/fonts/DouyinSansBold.woff2') format('woff2');
+  font-display: swap;
+}
+Add the fontFamily property to tailwind.config.js to extend fonts:
+{
+  fontFamily: {
+    'dou-yin-mei-hao': ['DouyinSansBold', 'sans-serif'],
+  }
+}
+Font Import Example
+Use via tailwind class name -- font-dou-yin-mei-hao
+/* YangRenDongZhuShiTi-Regular */
+@font-face {
+font-family: 'YangRenDongZhuShiTi-Regular';
+src: url('https://resource-static.bj.bcebos.com/fonts/YangRenDongZhuShiTi-Regular.woff2') format('woff2');
+font-display: swap;
+}
+plaintext
+Add the fontFamily property to tailwind.config.js to extend fonts:
+{
+  fontFamily: {
+    'yang-ren-dong-zhu-shi-ti-regular': ['YangRenDongZhuShiTi-Regular', 'sans-serif'],
+  }
+}
+Use via tailwind class name -- font-yang-ren-dong-zhu-shi-ti-regular
+/* Source Han Mono SC */
+@font-face {
+font-family: 'Source Han Mono SC';
+src: url('﻿﻿﻿https://resource-static.cdn.bcebos.com/fonts/SourceHanMonoSC-Regular.woff2') format('woff2');
+font-display: swap;
+}
+plaintext
+Add the fontFamily property to tailwind.config.js to extend fonts:
+{
+  fontFamily: {
+    'source-han-mono-sc': ['Source Han Mono SC', 'monospace'],
+  }
+}
+Use via tailwind class name -- font-source-han-mono-sc
+
+# Animation
+- No fade-in or fade-out effects; elements appear instantly or slide into the frame at high speed.
+- Button triggers do not rely on simple color changes, but instead feature immediate positional shifts or overall color inversion.
+
+# Layout
+- Content is not center-aligned, but extends toward the edges of the frame to create visual tension.
+- Borders are thick, solid, and clearly visible, defining layout structure rigorously with bold, hard-edged lines.
+
+
+- Title: Brutalism
+- Description: Based on high‑contrast color schemes and sharp edges, it states value propositions directly in oversized typography, exaggerates standard UI elements with stylized geometric sharp lines, and uses crisp, solid shadows to create a strong tactile depth. Through unexpected scattering, rotation, and stacking, it forms a playful yet disordered visual order.
+- Context: # Theme Name: Brutalism
+# Vibe & Description: Based on high‑contrast color schemes and sharp edges, it states value propositions directly in oversized typography, exaggerates standard UI elements with stylized geometric sharp lines, and uses crisp, solid shadows to create a strong tactile depth. Through unexpected scattering, rotation, and stacking, it forms a playful yet disordered visual order.
+
+# Color
+- Based on the overall vibe of the trendy and individualistic style and user needs, generate a suitable clashing color scheme, outputting primary, secondary, background, and accent colors.
+
+# Font
+- Title: We recommend using "Anton" as the title font.
+- Body text: Do not modify, use the default font.
+
+## Font import method
+Extend src/index.css to register fonts.
+```css
+/* Anton */
+@font-face {
+  font-family: 'Anton';
+  src: url('https://resource-static.bj.bcebos.com/fonts/Anton-Regular.woff2') format('woff2');
+  font-display: swap;
+}
+```
+tailwind.config.js add the fontFamily attribute to expand the font.
+```js
+{
+  fontFamily: {
+    'anton': ['Anton', 'sans-serif'],
+  }
+}
+```
+##Font import example
+Use by the tailwind class name -- font-anton
+
+# Animation
+## Elemental animation
+- Use bolder animations: such as cards floating, buttons flashing colors, icons rotating/sliding in on hover, etc.
+- Buttons will noticeably press down when clicked (transform: translate).
+- A horizontally scrolling marquee text banner spans the entire page.
+
+## Entrance Animation
+- Elements slide in from off-screen with a springy bounce effect.
+
+## Animation Implementation
+
+- The project integrates the tailwindcss-intersect plugin, which allows you to achieve animation effects when elements enter the viewport using methods similar to the following:
+opacity-0 intersect:opacity-100 transition duration-700
+-Animations can also be achieved using motion/react.
+# Layout
+- Emphasize visual hierarchy; use large font sizes for titles.
+- The overall visual effect resembles a collage of cards or posters. Use heavy use of thick black outlines (2px–4px) to separate areas.
+- Scrolling method: Mix horizontal scrolling areas with vertical scrolling to create rhythmic variation.
+
+# Elements
+- A pure black, unblurred shadow, typically offset 4–8 pixels to the lower right.
+- UI elements are "stuck" onto a canvas or wall, much like stickers.
+
+
+
+
+</observation>
+<action>
+SkillAction(skill='mobile-app', args='', thought='', action=<ActionType.SKILL: 'skill'>, security_risk=None)
+</action>
+<observation>
+SkillObservation(content='Base directory for this skill: /workspace/app-cuhcy5wjz3lt/.skills/mobile-app\n\n# Mobile App Development\n\n## REQUIRED: Read References Before Implementation\n\nRules below define constraints and prohibitions — they do NOT contain implementation code.\nCorrect implementation patterns are in reference files. Writing code without reading references produces incorrect results.\n\n1. Match your task to the reference table below\n2. `view` ALL matching reference files\n3. Follow the exact patterns from references — do NOT invent alternatives\n\n| Reference | When to read |\n|-----------|-------------|\n| `mobile-app/references/auth_routing.md` | Auth route guards (`Stack.Protected`), SessionProvider, login redirect flow, root layout loading state |\n| `mobile-app/references/media.md` | Image display, camera/gallery picker, compression, image upload to Supabase Storage, saving to photo library, passing URIs between screens, `expo-video`, device-capability permission pattern (incl. motion sensors / Pedometer), `app.json` permission declarations, image search (`image_search`), app icon generation (`app_icon_generate`) |\n| `mobile-app/references/data_patterns.md` | React Query, `expo-secure-store`, offline handling, local database (`expo-sqlite`) |\n| `mobile-app/references/navigation.md` | Complete `_layout.tsx` examples, `(tabs)/` directory structure, no-auth setup (removing Stack.Protected), dynamic routes (`[id].tsx`), `useFocusEffect` pattern, page navigation (`router.push/replace/back`, `Link`), modal / form sheet |\n| `mobile-app/references/components.md` | Pull-to-refresh, infinite scroll, instant touch feedback, keyboard avoidance, StatusBar, loading/empty states, error UX, splash screen, full icon mapping table, date/time picker example, ScrollView sidebar, Pressable active: modifier, form sheet |\n| `mobile-app/references/packages.md` | On-demand package classified list (Media / Device / Data / System / UI / Graphics) + platform compatibility |\n\n\n## Auth Routing Rules\n\n- Stack.Protected mutual exclusion: `(app)` and `(auth)` route groups MUST be mutually exclusive — use TWO `Stack.Protected` blocks in root `_layout.tsx`. Correct pattern → `references/auth_routing.md`\n- Auth redirect **REQUIRED**: `Stack.Protected guard={!!session}` only controls route availability — it does NOT auto-navigate.\n  MUST call `router.replace("/")` after every successful login / `signUp` / `signOut`.\n- NEVER `return null` in `_layout.tsx` loading: When `isLoading` is true, replace with `<ActivityIndicator>` instead — returning null causes permanent white screen.\n- ctx.tsx: MUST NOT recreate `src/ctx.tsx` — the boilerplate ships it with `supabase.auth.onAuthStateChange()` listener. Import `useSession` from `@/ctx` directly.\n\n## Device Permission Rules (ALL capabilities)\n\n- Permission is runtime, not static: applies to EVERY permission-gated capability — camera, photo library, location, notifications, AND **motion sensors** (e.g. `expo-sensors` Pedometer). Declaring a plugin in `app.json` does NOT grant access. MUST call the module\'s `requestPermissionsAsync()` at runtime and drive a `denied` UI from state (NOT `Alert.alert`). NEVER `catch` a permission error to silently degrade to `0` / empty data. Correct pattern → `references/media.md` § Device-Capability Permission Handling\n- Config plugin three-step rule: ① `pnpm exec expo install expo-xxx` → ② declare in `app.json` plugins with permission descriptions → ③ write feature code. Skipping any step breaks the feature; missing step ② causes lint error `no-undeclared-expo-plugin`.\n- `app.json` ↔ `package.json` sync **CRITICAL**: Every package listed in `app.json` `plugins` MUST also exist in `package.json` `dependencies`. Missing entries cause "Failed to resolve plugin for module" errors.\n\n## Media Rules\n\n- Image picking: Use `expo-image-picker` (NOT `expo-media-library`) for selecting images from gallery or camera.\n- `expo-media-library` **CRITICAL**: ALWAYS pass `(false, [\'photo\'])` — default also requests audio/video, which causes crashes if missing manifest declarations. Correct pattern → `references/media.md`\n- Image display: ALWAYS use `Image` from `expo-image` — NEVER `<img>` or `Image` from `react-native`.\n- Image upload: NEVER use `FileReader`, `blob`, or `base64` in React Native. Correct pattern → `references/media.md` § Image Upload\n- Image compression **REQUIRED** before upload: Use `expo-image-manipulator` to compress before uploading. Max upload size: 1 MB.\n- Passing URIs between screens: NEVER pass image URIs via expo-router URL params — Android `file://`/`content://` URIs get double-encoded and arrive corrupted.\n  Use a module-level store (`lib/imageStore.ts`).\n- iOS permission language: Android permissions are auto-merged into `AndroidManifest.xml`; iOS permissions MUST include user-readable descriptions in plugin config (`*Permission` fields).\n  The language MUST match the user\'s language (e.g., Chinese for Chinese users, English for English users).\n  - English user → `"Allow $(PRODUCT_NAME) to access the camera to take photos"`\n  - Chinese user → `"允许 $(PRODUCT_NAME) 访问相机以拍摄照片"`\n- No unnecessary packages: MUST NOT install device-capability packages the App does not actually use — unnecessary packages trigger permission prompts, degrade UX, and risk App Store rejection.\n- expo-video: NEVER use `expo-av` — always use `expo-video` for video playback. NEVER auto-load video on Web mount — browser autoplay policy throws `NotAllowedError`. Correct pattern → `references/media.md` § expo-video\n- Save to Photo Library: MUST use `expo-file-system` (requires plugin in app.json) to download remote URL to a local `file://` path first, then pass to `MediaLibrary.createAssetAsync()`. `saveToLibraryAsync`/`createAssetAsync` only accept `file://` URIs; `content://` URIs must be normalized via `manipulateAsync` first.\n- expo-file-system import: MUST use namespace import (`import * as FileSystem from "expo-file-system"`). NEVER use default import or named destructuring — `documentDirectory` and `downloadAsync` only exist on the namespace object.\n\n## Data Advanced Rules\n\n- React Query: Simple cases: `useFocusEffect` + `expo/fetch` + state. Complex cases with caching: use `@tanstack/react-query`. Correct pattern → `references/data_patterns.md` § React Query\n- Offline handling: Check network status with `expo-network` (`Network.getNetworkStateAsync()`). Show meaningful offline UI instead of silent failures. Implement pull-to-refresh for manual data refresh.\n- expo-sqlite: ONLY use async APIs (`openDatabaseAsync`/`runAsync`/`getAllAsync`) — sync APIs crash on Web. NEVER initialize DB at module top level. Correct pattern → `references/data_patterns.md` § expo-sqlite\n\n## File Handling\n\n- File preview (PDF, DOCX, Markdown — cross-platform iOS/Android/Web):\n  - PDF, DOCX: use `expo-web-browser` (requires plugin in app.json) → `WebBrowser.openBrowserAsync(fileUrl)`\n  - Markdown: render inline with `react-native-marked`\n- File download (cross-platform): use `expo-web-browser` — `WebBrowser.openBrowserAsync(fileUrl)`. No platform branching needed.', observation=<ObservationType.SKILL: 'skill'>, skill='mobile-app', success=True, data={'object_storage_path': 'skill-aws-online:aws-prod/miaoda_skills/prompts/system/mobile-app/'})
+</observation>
+<action>
+FileReadAction(path='/workspace/app-cuhcy5wjz3lt', start=0, end=-1, thought='', action=<ActionType.READ: 'read'>, security_risk=None, impl_source=<FileReadSource.OH_ACI: 'oh_aci'>, view_range=None, user_hidden=False)
+</action>
+<observation>
+[Read from /workspace/app-cuhcy5wjz3lt is successful.]
+Here's the files and directories up to 2 levels deep in /workspace/app-cuhcy5wjz3lt, excluding hidden:
+/workspace/app-cuhcy5wjz3lt
+/workspace/app-cuhcy5wjz3lt/node_modules
+/workspace/app-cuhcy5wjz3lt/tasks
+/workspace/app-cuhcy5wjz3lt/tasks/1000090006.png
+/workspace/app-cuhcy5wjz3lt/babel.config.js
+/workspace/app-cuhcy5wjz3lt/package.json
+/workspace/app-cuhcy5wjz3lt/pnpm-lock.yaml
+/workspace/app-cuhcy5wjz3lt/supabase
+/workspace/app-cuhcy5wjz3lt/supabase/migrations
+/workspace/app-cuhcy5wjz3lt/biome.json
+/workspace/app-cuhcy5wjz3lt/assets
+/workspace/app-cuhcy5wjz3lt/assets/icon.png
+/workspace/app-cuhcy5wjz3lt/assets/favicon.png
+/workspace/app-cuhcy5wjz3lt/assets/adaptive-icon.png
+/workspace/app-cuhcy5wjz3lt/components.json
+/workspace/app-cuhcy5wjz3lt/nativewind-env.d.ts
+/workspace/app-cuhcy5wjz3lt/docs
+/workspace/app-cuhcy5wjz3lt/docs/prd.md
+/workspace/app-cuhcy5wjz3lt/metro.config.js
+/workspace/app-cuhcy5wjz3lt/patches
+/workspace/app-cuhcy5wjz3lt/patches/expo@55.0.6.patch
+/workspace/app-cuhcy5wjz3lt/patches/@shopify__react-native-skia@2.4.18.patch
+/workspace/app-cuhcy5wjz3lt/pnpm-workspace.yaml
+/workspace/app-cuhcy5wjz3lt/tailwind.config.js
+/workspace/app-cuhcy5wjz3lt/src
+/workspace/app-cuhcy5wjz3lt/src/lib
+/workspace/app-cuhcy5wjz3lt/src/client
+/workspace/app-cuhcy5wjz3lt/src/ctx.tsx
+/workspace/app-cuhcy5wjz3lt/src/app
+/workspace/app-cuhcy5wjz3lt/src/components
+/workspace/app-cuhcy5wjz3lt/src/global.css
+/workspace/app-cuhcy5wjz3lt/tsconfig.json
+/workspace/app-cuhcy5wjz3lt/app.json
+
+
+</observation>
+<action>
+SkillAction(skill='image-generation', args='', thought='', action=<ActionType.SKILL: 'skill'>, security_risk=None)
+</action>
+<observation>
+SkillObservation(content='Base directory for this skill: /workspace/app-cuhcy5wjz3lt/.skills/image-generation\n\n# Image Generation (Advanced Version)\n\n## Capability Overview\n\nThis skill drives an asynchronous image-generation service that supports three modes:\n\n| Mode | Description |\n|------|-------------|\n| Text-to-Image | Generate an image from a text prompt alone |\n| Image-to-Image | Upload one image + a text instruction (e.g. style transfer, background swap) |\n| Multi-Image-to-Image | Compose two or more images together guided by a text prompt |\n\nThe workflow is always **submit → poll → result**. Tasks typically take up to 10 minutes; poll every 5–10 seconds.\n\n> Read `references/submit-api.md` for the full submit endpoint spec.\n> Read `references/query-api.md` for the full query/poll endpoint spec.\n\n---\n\n## End-to-End Async Workflow\n\n```typescript\n// Full async workflow: submit → poll → result\nasync function generateAndWait(\n  contents: ContentPart[]\n): Promise<string> {                      // returns the raw markdown image text\n  const { taskId } = await submitTask(contents);\n\n  const POLL_INTERVAL_MS = 7000;          // 5–10 s recommended\n  const TIMEOUT_MS = 10 * 60 * 1000;     // 10 minutes\n  const deadline = Date.now() + TIMEOUT_MS;\n\n  while (Date.now() < deadline) {\n    await new Promise(r => setTimeout(r, POLL_INTERVAL_MS));\n    const result = await queryTask(taskId);\n    if (result.status === "SUCCESS") {\n      // result.result.candidates[0].content.parts[0].text contains\n      // the image as a Markdown string: ![image](data:image/jpeg;base64,...)\n      return result.result.candidates[0].content.parts[0].text;\n    }\n    if (result.status === "FAILED") {\n      throw new Error(`Task failed: ${JSON.stringify(result.error)}`);\n    }\n    if (result.status === "TIMEOUT") {\n      throw new Error(`Task ${taskId} timed out on the server side`);\n    }\n    // PENDING → keep polling\n  }\n  throw new Error(`Task ${taskId} timed out after 10 minutes`);\n}\n```\n\n---\n\n## Generation-Time Usage (Agent Direct Call)\n\nSee `references/submit-api.md` and `references/query-api.md` for the individual function implementations. Compose them with the `generateAndWait` loop above.\n\n**Generation-time file saving (required):**\n\nThe query response embeds the image directly as **Base64 data** inside a Markdown string (not a URL). After receiving the result, extract the Base64 payload and save it to disk immediately.\n\n```bash\n# Extract Base64 from the markdown string and decode to a file\necho "<base64_data>" | base64 -d > ~/generated-image.jpg\n```\n\n**Complete generation-time workflow (including save step):**\n\n1. Call `submitTask(contents)` to submit the generation job → receive `taskId`\n2. Poll `queryTask(taskId)` every 7 seconds until `status === "SUCCESS"`, `"FAILED"`, or `"TIMEOUT"` (timeout 10 min)\n3. Extract the Base64 string from `candidates[0].content.parts[0].text` (strip the `![image](data:image/jpeg;base64,` prefix and the closing `)`)\n4. Use Bash tool: `echo "<base64>" | base64 -d > <local-path>.jpg`\n5. Tell the user the file has been saved\n\n> **Note**: The Base64 image data exists only in the current response. Save it immediately — it will be lost if not persisted.\n\n---\n\n## Post-Generation Usage (In-App via Edge Function)\n\nSee `references/submit-api.md` for the submit Edge Function boilerplate and `references/query-api.md` for the query Edge Function boilerplate.\n\nThe recommended application-side pattern is:\n\n1. Frontend calls the `image-generation-submit` Edge Function → receives `taskId`\n2. Frontend polls the `image-generation-query` Edge Function every 7 seconds\n3. On `SUCCESS`, the Edge Function decodes the Base64 and uploads to Supabase Storage, returning a persistent `publicUrl`\n4. Frontend displays the image from `publicUrl`\n\n---\n\n## Billing\n\n| Item | Price |\n|------|-------|\n| Original price | ¥17.60 / call |\n| Discounted price | ¥13.50 / call |\n\nEach complete generation (submit + poll to terminal state) is billed as **1 call**. Avoid resubmitting the same task.\n\n---\n\n## Notes\n\n- **Key security**: `INTEGRATIONS_API_KEY` may only be read server-side in an Edge Function; never expose it to the frontend.\n- **Error handling**: Always handle 429 (quota exceeded) and 402 (insufficient balance); forward those error bodies verbatim to the frontend.\n- **Base64 format**: When uploading images, `inline_data.data` must be a pure Base64 string — do not include the `data:image/xxx;base64,` prefix.\n- **Request size**: The total size of a single request (including all images) must not exceed **20 MB**.\n- **Supported formats**: PNG, JPEG, WEBP.\n- **Timeout**: Set the task timeout to at least 10 minutes; poll every 5–10 seconds.', observation=<ObservationType.SKILL: 'skill'>, skill='image-generation', success=True, data={'object_storage_path': 'skill-aws-online:aws-prod/miaoda_skills/prompts/managed/image-generation/'})
+</observation>
+<action>
+FileReadAction(path='/workspace/app-cuhcy5wjz3lt/src/app', start=0, end=-1, thought='', action=<ActionType.READ: 'read'>, security_risk=None, impl_source=<FileReadSource.OH_ACI: 'oh_aci'>, view_range=None, user_hidden=False)
+</action>
+<observation>
+[Read from /workspace/app-cuhcy5wjz3lt/src/app is successful.]
+Here's the files and directories up to 2 levels deep in /workspace/app-cuhcy5wjz3lt/src/app, excluding hidden:
+/workspace/app-cuhcy5wjz3lt/src/app
+/workspace/app-cuhcy5wjz3lt/src/app/(app)
+/workspace/app-cuhcy5wjz3lt/src/app/(app)/_layout.tsx
+/workspace/app-cuhcy5wjz3lt/src/app/(app)/home.tsx
+/workspace/app-cuhcy5wjz3lt/src/app/_layout.tsx
+/workspace/app-cuhcy5wjz3lt/src/app/(auth)
+/workspace/app-cuhcy5wjz3lt/src/app/(auth)/sign-in.tsx
+/workspace/app-cuhcy5wjz3lt/src/app/(auth)/_layout.tsx
+/workspace/app-cuhcy5wjz3lt/src/app/index.tsx
+
+
+</observation>
+<action>
+FileReadAction(path='/workspace/app-cuhcy5wjz3lt/src/components', start=0, end=-1, thought='', action=<ActionType.READ: 'read'>, security_risk=None, impl_source=<FileReadSource.OH_ACI: 'oh_aci'>, view_range=None, user_hidden=False)
+</action>
+<observation>
+[Read from /workspace/app-cuhcy5wjz3lt/src/components is successful.]
+Here's the files and directories up to 2 levels deep in /workspace/app-cuhcy5wjz3lt/src/components, excluding hidden:
+/workspace/app-cuhcy5wjz3lt/src/components
+/workspace/app-cuhcy5wjz3lt/src/components/ui
+/workspace/app-cuhcy5wjz3lt/src/components/ui/card.tsx
+/workspace/app-cuhcy5wjz3lt/src/components/ui/select.tsx
+/workspace/app-cuhcy5wjz3lt/src/components/ui/textarea.tsx
+/workspace/app-cuhcy5wjz3lt/src/components/ui/badge.tsx
+/workspace/app-cuhcy5wjz3lt/src/components/ui/alert-dialog.tsx
+/workspace/app-cuhcy5wjz3lt/src/components/ui/skeleton.tsx
+/workspace/app-cuhcy5wjz3lt/src/components/ui/progress.tsx
+/workspace/app-cuhcy5wjz3lt/src/components/ui/native-only-animated-view.tsx
+/workspace/app-cuhcy5wjz3lt/src/components/ui/context-menu.tsx
+/workspace/app-cuhcy5wjz3lt/src/components/ui/separator.tsx
+/workspace/app-cuhcy5wjz3lt/src/components/ui/menubar.tsx
+/workspace/app-cuhcy5wjz3lt/src/components/ui/radio-group.tsx
+/workspace/app-cuhcy5wjz3lt/src/components/ui/toggle.tsx
+/workspace/app-cuhcy5wjz3lt/src/components/ui/button.tsx
+/workspace/app-cuhcy5wjz3lt/src/components/ui/icon.tsx
+/workspace/app-cuhcy5wjz3lt/src/components/ui/collapsible.tsx
+/workspace/app-cuhcy5wjz3lt/src/components/ui/accordion.tsx
+/workspace/app-cuhcy5wjz3lt/src/components/ui/hover-card.tsx
+/workspace/app-cuhcy5wjz3lt/src/components/ui/dropdown-menu.tsx
+/workspace/app-cuhcy5wjz3lt/src/components/ui/toggle-group.tsx
+/workspace/app-cuhcy5wjz3lt/src/components/ui/tabs.tsx
+/workspace/app-cuhcy5wjz3lt/src/components/ui/text.tsx
+/workspace/app-cuhcy5wjz3lt/src/components/ui/tooltip.tsx
+/workspace/app-cuhcy5wjz3lt/src/components/ui/switch.tsx
+/workspace/app-cuhcy5wjz3lt/src/components/ui/popover.tsx
+/workspace/app-cuhcy5wjz3lt/src/components/ui/input.tsx
+/workspace/app-cuhcy5wjz3lt/src/components/ui/alert.tsx
+/workspace/app-cuhcy5wjz3lt/src/components/ui/label.tsx
+/workspace/app-cuhcy5wjz3lt/src/components/ui/checkbox.tsx
+/workspace/app-cuhcy5wjz3lt/src/components/ui/dialog.tsx
+/workspace/app-cuhcy5wjz3lt/src/components/ui/aspect-ratio.tsx
+/workspace/app-cuhcy5wjz3lt/src/components/ui/avatar.tsx
+
+
+</observation>
+<action>
+FileReadAction(path='/workspace/app-cuhcy5wjz3lt/app.json', start=0, end=-1, thought='', action=<ActionType.READ: 'read'>, security_risk=None, impl_source=<FileReadSource.OH_ACI: 'oh_aci'>, view_range=None, user_hidden=False)
+</action>
+<observation>
+[Read from /workspace/app-cuhcy5wjz3lt/app.json is successful.]
+Here's the result of running `cat -n` on the file: /workspace/app-cuhcy5wjz3lt/app.json:
+     1 {
+     2   "expo": {
+     3     "name": "expo-template",
+     4     "slug": "expo-template",
+     5     "version": "1.0.0",
+     6     "orientation": "portrait",
+     7     "icon": "./assets/icon.png",
+     8     "userInterfaceStyle": "light",
+     9     "ios": {
+    10       "supportsTablet": true,
+    11       "buildNumber": "1"
+    12     },
+    13     "android": {
+    14       "adaptiveIcon": {
+    15         "foregroundImage": "./assets/adaptive-icon.png",
+    16         "backgroundColor": "#ffffff"
+    17       },
+    18       "predictiveBackGestureEnabled": false,
+    19       "versionCode": 1
+    20     },
+    21     "web": {
+    22       "bundler": "metro",
+    23       "favicon": "./assets/favicon.png"
+    24     },
+    25     "plugins": [
+    26       "expo-router",
+    27       "expo-asset",
+    28       "expo-sqlite",
+    29       "expo-font",
+    30       "expo-system-ui"
+    31     ],
+    32     "router": {
+    33       "root": "src"
+    34     },
+    35     "experiments": {
+    36       "typedRoutes": true
+    37     }
+    38   }
+    39 }
+    40 
+
+
+</observation>
+<action>
+FileReadAction(path='/workspace/app-cuhcy5wjz3lt/tailwind.config.js', start=0, end=-1, thought='', action=<ActionType.READ: 'read'>, security_risk=None, impl_source=<FileReadSource.OH_ACI: 'oh_aci'>, view_range=None, user_hidden=False)
+</action>
+<observation>
+[Read from /workspace/app-cuhcy5wjz3lt/tailwind.config.js is successful.]
+Here's the result of running `cat -n` on the file: /workspace/app-cuhcy5wjz3lt/tailwind.config.js:
+     1 /** @type {import('tailwindcss').Config} */
+     2 module.exports = {
+     3   content: ['./src/app/**/*.{js,jsx,ts,tsx}', './src/components/**/*.{js,jsx,ts,tsx}'],
+     4   presets: [require('nativewind/preset')],
+     5   darkMode: 'class',
+     6   theme: {
+     7     extend: {
+     8       borderRadius: {
+     9         lg: 'var(--radius)',
+    10         md: 'calc(var(--radius) - 2px)',
+    11         sm: 'calc(var(--radius) - 4px)',
+    12       },
+    13       colors: {
+    14         border: 'hsl(var(--border))',
+    15         input: 'hsl(var(--input))',
+    16         ring: 'hsl(var(--ring))',
+    17         background: 'hsl(var(--background))',
+    18         foreground: 'hsl(var(--foreground))',
+    19         primary: {
+    20           DEFAULT: 'hsl(var(--primary))',
+    21           foreground: 'hsl(var(--primary-foreground))',
+    22         },
+    23         secondary: {
+    24           DEFAULT: 'hsl(var(--secondary))',
+    25           foreground: 'hsl(var(--secondary-foreground))',
+    26         },
+    27         destructive: {
+    28           DEFAULT: 'hsl(var(--destructive))',
+    29           foreground: 'hsl(var(--destructive-foreground))',
+    30         },
+    31         muted: {
+    32           DEFAULT: 'hsl(var(--muted))',
+    33           foreground: 'hsl(var(--muted-foreground))',
+    34         },
+    35         accent: {
+    36           DEFAULT: 'hsl(var(--accent))',
+    37           foreground: 'hsl(var(--accent-foreground))',
+    38         },
+    39         popover: {
+    40           DEFAULT: 'hsl(var(--popover))',
+    41           foreground: 'hsl(var(--popover-foreground))',
+    42         },
+    43         card: {
+    44           DEFAULT: 'hsl(var(--card))',
+    45           foreground: 'hsl(var(--card-foreground))',
+    46         },
+    47       },
+    48     },
+    49   },
+    50   plugins: [require('tailwindcss-animate')],
+    51 };
+    52 
+
+
+</observation>
+<action>
+FileReadAction(path='/workspace/app-cuhcy5wjz3lt/src/global.css', start=0, end=-1, thought='', action=<ActionType.READ: 'read'>, security_risk=None, impl_source=<FileReadSource.OH_ACI: 'oh_aci'>, view_range=None, user_hidden=False)
+</action>
+<observation>
+[Read from /workspace/app-cuhcy5wjz3lt/src/global.css is successful.]
+Here's the result of running `cat -n` on the file: /workspace/app-cuhcy5wjz3lt/src/global.css:
+     1 @tailwind base;
+     2 @tailwind components;
+     3 @tailwind utilities;
+     4 
+     5 @layer base {
+     6   :root {
+     7     --background: 0 0% 100%;
+     8     --foreground: 0 0% 3.9%;
+     9     --card: 0 0% 100%;
+    10     --card-foreground: 0 0% 3.9%;
+    11     --popover: 0 0% 100%;
+    12     --popover-foreground: 0 0% 3.9%;
+    13     --primary: 0 0% 9%;
+    14     --primary-foreground: 0 0% 98%;
+    15     --secondary: 0 0% 96.1%;
+    16     --secondary-foreground: 0 0% 9%;
+    17     --muted: 0 0% 96.1%;
+    18     --muted-foreground: 0 0% 45.1%;
+    19     --accent: 0 0% 96.1%;
+    20     --accent-foreground: 0 0% 9%;
+    21     --destructive: 0 84.2% 60.2%;
+    22     --destructive-foreground: 0 0% 98%;
+    23     --border: 0 0% 89.8%;
+    24     --input: 0 0% 89.8%;
+    25     --ring: 0 0% 3.9%;
+    26     --radius: 0.5rem;
+    27   }
+    28 
+    29   .dark {
+    30     --background: 0 0% 3.9%;
+    31     --foreground: 0 0% 98%;
+    32     --card: 0 0% 3.9%;
+    33     --card-foreground: 0 0% 98%;
+    34     --popover: 0 0% 3.9%;
+    35     --popover-foreground: 0 0% 98%;
+    36     --primary: 0 0% 98%;
+    37     --primary-foreground: 0 0% 9%;
+    38     --secondary: 0 0% 14.9%;
+    39     --secondary-foreground: 0 0% 98%;
+    40     --muted: 0 0% 14.9%;
+    41     --muted-foreground: 0 0% 63.9%;
+    42     --accent: 0 0% 14.9%;
+    43     --accent-foreground: 0 0% 98%;
+    44     --destructive: 0 84.2% 60.2%;
+    45     --destructive-foreground: 0 0% 98%;
+    46     --border: 0 0% 14.9%;
+    47     --input: 0 0% 14.9%;
+    48     --ring: 0 0% 83.1%;
+    49   }
+    50 }
+    51 
+
+
+</observation>
+<action>
+AgentThinkAction(thought='This is a complex game app. Let me plan the architecture:\n\n1. No auth needed - this is a pure game app, so I should remove Stack.Protected, SessionProvider, and auth\n2. The game needs: physics simulation (Matter.js or custom), canvas/Skia rendering, complex UI\n\nKey screens:\n- Main Game Screen (gameplay with physics)\n- World Map\n- Collection Book\n- Daily Rewards\n- Shop\n- Settings\n- Level Complete overlay\n- Unlock Animation overlay\n- Character Evolution Tree\n\nFor physics-based game on React Native/Expo, I can use:\n- @shopify/react-native-skia for canvas rendering - but this has Web issues (Canvas doesn\'t work on Web)\n- Or pure React Native with Animated/Reanimated for a simplified physics simulation\n- Or react-native-game-engine\n\nSince the boilerplate already has @shopify/react-native-skia patched, I can use Skia for game rendering but need web fallback.\n\nActually, looking at the NATIVE_APP_CONSTRAINTS: "@shopify/react-native-skia Canvas genuinely breaks on Web" - I need a Web fallback.\n\nLet me think about approach:\n- Use Skia Canvas for native (iOS/Android) \n- For Web, show a message or use a simplified Canvas-based version\n\nActually, for this game I\'ll implement it using:\n1. React Native Reanimated + Gesture Handler for interactions\n2. Custom physics simulation with useAnimatedValue\n3. Skia for rich game rendering on native, with web fallback\n\nBut the physics simulation is complex. Let me simplify:\n- Use a simplified grid-based merge simulation (like 2048 style) rather than true physics\n- BUT the PRD says physics-based - so I need real physics\n\nActually, let me use a custom JS physics simulation (no native modules) that works on all platforms:\n- Simple gravity + collision simulation using Reanimated worklets or just useState + setInterval\n- Render objects as React Native Views with absolute positioning\n- This works on Web too\n\nThis is more feasible. The physics won\'t be Unity-level but will be functional.\n\nPlan:\n1. Custom physics engine with useRef + requestAnimationFrame\n2. Objects rendered as positioned Views with SVG emoji-like characters\n3. Merge detection when objects overlap\n\nFor the art, since we can\'t use image-generation for game assets in real-time, I\'ll use:\n- Emoji characters for dragons/eggs\n- SVG/LinearGradient for visual polish\n- Custom styled Views for game board\n\nLet me plan the file structure:\n- src/app/index.tsx → Landing/Home screen (no auth)\n- src/app/_layout.tsx → Simplified root layout (no auth)\n- src/app/(app)/_layout.tsx → Stack\n- src/app/(app)/game.tsx → Main game screen\n- src/app/(app)/world-map.tsx → World map\n- src/app/(app)/collection.tsx → Collection book\n- src/app/(app)/daily-rewards.tsx → Daily rewards\n- src/app/(app)/shop.tsx → Shop\n- src/app/(app)/settings.tsx → Settings\n- src/app/(app)/evolution-tree.tsx → Character evolution tree\n\nGame engine:\n- src/lib/gameEngine.ts → Physics simulation\n- src/lib/gameTypes.ts → Types\n- src/lib/gameData.ts → Dragon/egg definitions\n\nComponents:\n- src/components/game/GameBoard.tsx → The game board container\n- src/components/game/DragonSprite.tsx → Dragon/egg visual\n- src/components/game/MergeEffect.tsx → Merge animation\n- src/components/game/BoosterBar.tsx → Bottom booster buttons\n- src/components/game/ScorePanel.tsx → Score display\n- src/components/game/NextPreview.tsx → Next character preview\n\nI need to carefully handle the physics on Web. Since I\'m using React Native\'s Animated or just JS simulation, it should work cross-platform.\n\nLet me simplify the physics approach:\n- Use requestAnimationFrame loop\n- Objects have position (x, y), velocity (vx, vy)\n- Gravity applied each frame\n- Boundary collision detection\n- Object-to-object collision detection\n- On collision of same type: merge\n\nThis is doable in pure JS/TS and works on both native and web.\n\nFor rendering: Use React Native View + Animated for object positions. Each "object" is a positioned View containing the dragon emoji/character.\n\nThis is the most cross-platform approach.\n\nLet me now plan all the files I need to create.', action=<ActionType.THINK: 'think'>)
+</action>
+<observation>
+AgentThinkObservation(content='Your thought has been logged.', observation=<ObservationType.THINK: 'think'>)
+</observation>
+<action>
+TodoAction(todos=[TodoItem(id='1', status='in_progress', priority=None, content='Setup app foundation: app.json, global.css theme, root layout (no-auth), navigation structure', details='', group=None, agent_name=None), TodoItem(id='2', status='pending', priority=None, content='Create game engine: physics simulation, game types, dragon data definitions', details='', group=None, agent_name=None), TodoItem(id='3', status='pending', priority=None, content='Build main game screen with game board, physics rendering, drag-to-drop, merge logic', details='', group=None, agent_name=None), TodoItem(id='4', status='pending', priority=None, content='Build game UI components: ScorePanel, BoosterBar, NextPreview, MergeEffect', details='', group=None, agent_name=None), TodoItem(id='5', status='pending', priority=None, content='Build World Map screen with floating islands and level nodes', details='', group=None, agent_name=None), TodoItem(id='6', status='pending', priority=None, content='Build Collection Book screen with dragon gallery and evolution guide', details='', group=None, agent_name=None), TodoItem(id='7', status='pending', priority=None, content='Build Daily Rewards, Shop, Settings screens', details='', group=None, agent_name=None), TodoItem(id='8', status='pending', priority=None, content='Build Level Complete overlay and Unlock Animation screen', details='', group=None, agent_name=None), TodoItem(id='9', status='pending', priority=None, content='Build Evolution Tree screen', details='', group=None, agent_name=None), TodoItem(id='10', status='pending', priority=None, content='Generate app icon, run lint, fix all issues', details='', group=None, agent_name=None)], command='create', thought='', action=<ActionType.TODO: 'todo'>, content='')
+</action>
+<observation>
+TodoObservation(content='<system-reminder>\nYour todo list has changed. Here are the latest contents of your todo list:\n\n1. Setup app foundation: app.json, global.css theme, root layout (no-auth), navigation structure [in_progress]\n2. Create game engine: physics simulation, game types, dragon data definitions [pending]\n3. Build main game screen with game board, physics rendering, drag-to-drop, merge logic [pending]\n4. Build game UI components: ScorePanel, BoosterBar, NextPreview, MergeEffect [pending]\n5. Build World Map screen with floating islands and level nodes [pending]\n6. Build Collection Book screen with dragon gallery and evolution guide [pending]\n7. Build Daily Rewards, Shop, Settings screens [pending]\n8. Build Level Complete overlay and Unlock Animation screen [pending]\n9. Build Evolution Tree screen [pending]\n10. Generate app icon, run lint, fix all issues [pending]\n</system-reminder>', state=TodoState(items=[TodoItem(id='1', status='in_progress', priority=None, content='Setup app foundation: app.json, global.css theme, root layout (no-auth), navigation structure', details='', group=None, agent_name=None), TodoItem(id='2', status='pending', priority=None, content='Create game engine: physics simulation, game types, dragon data definitions', details='', group=None, agent_name=None), TodoItem(id='3', status='pending', priority=None, content='Build main game screen with game board, physics rendering, drag-to-drop, merge logic', details='', group=None, agent_name=None), TodoItem(id='4', status='pending', priority=None, content='Build game UI components: ScorePanel, BoosterBar, NextPreview, MergeEffect', details='', group=None, agent_name=None), TodoItem(id='5', status='pending', priority=None, content='Build World Map screen with floating islands and level nodes', details='', group=None, agent_name=None), TodoItem(id='6', status='pending', priority=None, content='Build Collection Book screen with dragon gallery and evolution guide', details='', group=None, agent_name=None), TodoItem(id='7', status='pending', priority=None, content='Build Daily Rewards, Shop, Settings screens', details='', group=None, agent_name=None), TodoItem(id='8', status='pending', priority=None, content='Build Level Complete overlay and Unlock Animation screen', details='', group=None, agent_name=None), TodoItem(id='9', status='pending', priority=None, content='Build Evolution Tree screen', details='', group=None, agent_name=None), TodoItem(id='10', status='pending', priority=None, content='Generate app icon, run lint, fix all issues', details='', group=None, agent_name=None)], updated_at='2026-07-07T06:01:40.204174+00:00'), system_reminder='', observation=<ObservationType.TODO: 'todo'>)
+</observation>
+<action>
+**FileEditAction**
+Path: [/workspace/app-cuhcy5wjz3lt/app.json]
+Thought: Now let me set up the foundation files:
+Command: str_replace
+Old String: ```
+{
+  "expo": {
+    "name": "expo-template",
+    "slug": "expo-template",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true,
+      "buildNumber": "1"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "predictiveBackGestureEnabled": false,
+      "versionCode": 1
+    },
+    "web": {
+      "bundler": "metro",
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-asset",
+      "expo-sqlite",
+      "expo-font",
+      "expo-system-ui"
+    ],
+    "router": {
+      "root": "src"
+    },
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
+```
+New String: ```
+{
+  "expo": {
+    "name": "Dragon Merge Kingdom",
+    "slug": "dragon-merge-kingdom",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": false,
+      "buildNumber": "1"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#6B21A8"
+      },
+      "predictiveBackGestureEnabled": false,
+      "versionCode": 1
+    },
+    "web": {
+      "bundler": "metro",
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-asset",
+      "expo-sqlite",
+      "expo-font",
+      "expo-system-ui"
+    ],
+    "router": {
+      "root": "src"
+    },
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
+```
+
+</action>
+<observation>
+ERROR: search text not found in file
+
+</observation>
+<action>
+FileReadAction(path='/workspace/app-cuhcy5wjz3lt/app.json', start=0, end=-1, thought='', action=<ActionType.READ: 'read'>, security_risk=None, impl_source=<FileReadSource.OH_ACI: 'oh_aci'>, view_range=None, user_hidden=False)
+</action>
+<observation>
+[Read from /workspace/app-cuhcy5wjz3lt/app.json is successful.]
+Here's the result of running `cat -n` on the file: /workspace/app-cuhcy5wjz3lt/app.json:
+     1 {
+     2   "expo": {
+     3     "name": "expo-template",
+     4     "slug": "expo-template",
+     5     "version": "1.0.0",
+     6     "orientation": "portrait",
+     7     "icon": "./assets/icon.png",
+     8     "userInterfaceStyle": "light",
+     9     "ios": {
+    10       "supportsTablet": true,
+    11       "buildNumber": "1",
+    12       "bundleIdentifier": "com.miaoda.appcuhcy5wjz3lt"
+    13     },
+    14     "android": {
+    15       "adaptiveIcon": {
+    16         "foregroundImage": "./assets/adaptive-icon.png",
+    17         "backgroundColor": "#ffffff"
+    18       },
+    19       "predictiveBackGestureEnabled": false,
+    20       "versionCode": 1,
+    21       "package": "com.miaoda.appcuhcy5wjz3lt"
+    22     },
+    23     "web": {
+    24       "bundler": "metro",
+    25       "favicon": "./assets/favicon.png"
+    26     },
+    27     "plugins": [
+    28       "expo-router",
+    29       "expo-asset",
+    30       "expo-sqlite",
+    31       "expo-font",
+    32       "expo-system-ui"
+    33     ],
+    34     "router": {
+    35       "root": "src"
+    36     },
+    37     "experiments": {
+    38       "typedRoutes": true
+    39     }
+    40   }
+    41 }
+
+
+</observation>
+<action>
+FileReadAction(path='/workspace/app-cuhcy5wjz3lt/src/app/_layout.tsx', start=0, end=-1, thought='', action=<ActionType.READ: 'read'>, security_risk=None, impl_source=<FileReadSource.OH_ACI: 'oh_aci'>, view_range=None, user_hidden=False)
+</action>
+<observation>
+[Read from /workspace/app-cuhcy5wjz3lt/src/app/_layout.tsx is successful.]
+Here's the result of running `cat -n` on the file: /workspace/app-cuhcy5wjz3lt/src/app/_layout.tsx:
+     1 import * as Sentry from '@sentry/react-native';
+     2 import { Stack } from 'expo-router';
+     3 import { PortalHost } from '@rn-primitives/portal';
+     4 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+     5 
+     6 import { SessionProvider, useSession } from '@/ctx';
+     7 import "../global.css";
+     8 
+     9 Sentry.init({
+    10   dsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
+    11 });
+    12 
+    13 function RootLayoutNav() {
+    14   const { session, isLoading } = useSession();
+    15 
+    16   if (isLoading) return null;
+    17 
+    18   return (
+    19     <Stack screenOptions={{ headerShown: false }}>
+    20       {/* 公开路由：无需登录即可访问 */}
+    21       <Stack.Protected guard={!session}>
+    22         <Stack.Screen name="index" />
+    23         <Stack.Screen name="(auth)" />
+    24       </Stack.Protected>
+    25       {/* 受保护路由：guard=false 时路由从路由表移除，自动回落至最近可用路由 */}
+    26       <Stack.Protected guard={!!session}>
+    27         <Stack.Screen name="(app)" />
+    28       </Stack.Protected>
+    29     </Stack>
+    30   );
+    31 }
+    32 
+    33 const RootLayout: React.FC = () => {
+    34   return (
+    35     <GestureHandlerRootView style={{ flex: 1 }}>
+    36       <SessionProvider>
+    37         <RootLayoutNav />
+    38         <PortalHost />
+    39       </SessionProvider>
+    40     </GestureHandlerRootView>
+    41   );
+    42 };
+    43 
+    44 export default Sentry.wrap(RootLayout);
+    45 
+
+
+</observation>
+<action>
+FileReadAction(path='/workspace/app-cuhcy5wjz3lt/src/app/index.tsx', start=0, end=-1, thought='', action=<ActionType.READ: 'read'>, security_risk=None, impl_source=<FileReadSource.OH_ACI: 'oh_aci'>, view_range=None, user_hidden=False)
+</action>
+<observation>
+[Read from /workspace/app-cuhcy5wjz3lt/src/app/index.tsx is successful.]
+Here's the result of running `cat -n` on the file: /workspace/app-cuhcy5wjz3lt/src/app/index.tsx:
+     1 import { Text, View } from 'react-native';
+     2 
+     3 export default function HomeScreen() {
+     4   return (
+     5     <View className="flex-1 items-center justify-center bg-white">
+     6       <Text className="text-base text-gray-800">Open up app/index.tsx to start working on your app!</Text>
+     7     </View>
+     8   );
+     9 }
+    10 
+
+
+</observation>
+<action>
+FileReadAction(path='/workspace/app-cuhcy5wjz3lt/src/app/(app)/_layout.tsx', start=0, end=-1, thought='', action=<ActionType.READ: 'read'>, security_risk=None, impl_source=<FileReadSource.OH_ACI: 'oh_aci'>, view_range=None, user_hidden=False)
+</action>
+<observation>
+[Read from /workspace/app-cuhcy5wjz3lt/src/app/(app)/_layout.tsx is successful.]
+Here's the result of running `cat -n` on the file: /workspace/app-cuhcy5wjz3lt/src/app/(app)/_layout.tsx:
+     1 import { Stack } from 'expo-router';
+     2 
+     3 export default function AppLayout() {
+     4   return <Stack screenOptions={{ headerShown: false }} />;
+     5 }
+     6 
+
+
+</observation>
+<action>
+FileReadAction(path='/workspace/app-cuhcy5wjz3lt/src/app/(app)/home.tsx', start=0, end=-1, thought='', action=<ActionType.READ: 'read'>, security_risk=None, impl_source=<FileReadSource.OH_ACI: 'oh_aci'>, view_range=None, user_hidden=False)
+</action>
+<observation>
+[Read from /workspace/app-cuhcy5wjz3lt/src/app/(app)/home.tsx is successful.]
+Here's the result of running `cat -n` on the file: /workspace/app-cuhcy5wjz3lt/src/app/(app)/home.tsx:
+     1 import { Text, TouchableOpacity, View } from 'react-native';
+     2 
+     3 import { supabase } from '@/client/supabase';
+     4 
+     5 export default function HomeScreen() {
+     6   return (
+     7     <View className="flex-1 items-center justify-center bg-white gap-4">
+     8       <Text className="text-base text-gray-800">Open up app/index.tsx to start working on your app!</Text>
+     9       <TouchableOpacity
+    10         className="bg-black rounded-lg px-6 py-3"
+    11         onPress={() => supabase.auth.signOut()}
+    12       >
+    13         <Text className="text-white font-semibold">Sign Out</Text>
+    14       </TouchableOpacity>
+    15     </View>
+    16   );
+    17 }
+    18 
+
+
+</observation>
+<action>
+FileReadAction(path='/workspace/app-cuhcy5wjz3lt/package.json', start=0, end=-1, thought='', action=<ActionType.READ: 'read'>, security_risk=None, impl_source=<FileReadSource.OH_ACI: 'oh_aci'>, view_range=None, user_hidden=False)
+</action>
+<observation>
+[Read from /workspace/app-cuhcy5wjz3lt/package.json is successful.]
+Here's the result of running `cat -n` on the file: /workspace/app-cuhcy5wjz3lt/package.json:
+     1 {
+     2   "name": "expo-template",
+     3   "version": "1.0.0",
+     4   "main": "expo-router/entry",
+     5   "scripts": {
+     6     "start": "expo start",
+     7     "android": "expo start --android",
+     8     "ios": "expo start --ios",
+     9     "web": "expo start --web",
+    10     "lint": "devkit-lint"
+    11   },
+    12   "dependencies": {
+    13     "@react-navigation/native": "^7.1.33",
+    14     "@rn-primitives/accordion": "^1.4.0",
+    15     "@rn-primitives/alert-dialog": "^1.4.0",
+    16     "@rn-primitives/aspect-ratio": "^1.4.0",
+    17     "@rn-primitives/avatar": "^1.4.0",
+    18     "@rn-primitives/checkbox": "^1.4.0",
+    19     "@rn-primitives/collapsible": "^1.4.0",
+    20     "@rn-primitives/context-menu": "^1.4.0",
+    21     "@rn-primitives/dialog": "^1.4.0",
+    22     "@rn-primitives/dropdown-menu": "^1.4.0",
+    23     "@rn-primitives/hover-card": "^1.4.0",
+    24     "@rn-primitives/label": "^1.4.0",
+    25     "@rn-primitives/menubar": "^1.4.0",
+    26     "@rn-primitives/popover": "^1.4.0",
+    27     "@rn-primitives/portal": "^1.4.0",
+    28     "@rn-primitives/progress": "^1.4.0",
+    29     "@rn-primitives/radio-group": "^1.4.0",
+    30     "@rn-primitives/select": "^1.4.0",
+    31     "@rn-primitives/separator": "^1.4.0",
+    32     "@rn-primitives/slot": "^1.4.0",
+    33     "@rn-primitives/switch": "^1.4.0",
+    34     "@rn-primitives/tabs": "^1.4.0",
+    35     "@rn-primitives/toggle": "^1.4.0",
+    36     "@rn-primitives/toggle-group": "^1.4.0",
+    37     "@rn-primitives/tooltip": "^1.4.0",
+    38     "@sentry/react-native": "8.9.2",
+    39     "@supabase/supabase-js": "2.103.1",
+    40     "class-variance-authority": "^0.7.1",
+    41     "clsx": "^2.1.1",
+    42     "expo": "55.0.6",
+    43     "expo-asset": "~55.0.8",
+    44     "expo-constants": "~55.0.7",
+    45     "expo-font": "~55.0.4",
+    46     "expo-linking": "~55.0.7",
+    47     "expo-router": "55.0.5",
+    48     "expo-sqlite": "~55.0.10",
+    49     "expo-status-bar": "~55.0.4",
+    50     "expo-system-ui": "~55.0.9",
+    51     "lucide-react-native": "^1.11.0",
+    52     "miaoda-expo-devkit": "0.1.1-beta.87",
+    53     "nativewind": "^4.2.3",
+    54     "react": "19.2.0",
+    55     "react-dom": "19.2.0",
+    56     "react-native": "0.83.2",
+    57     "react-native-css-interop": "^0.2.3",
+    58     "react-native-gesture-handler": "~2.30.0",
+    59     "react-native-reanimated": "4.2.1",
+    60     "react-native-safe-area-context": "~5.6.2",
+    61     "react-native-screens": "~4.23.0",
+    62     "react-native-svg": "15.15.3",
+    63     "react-native-web": "~0.21.0",
+    64     "react-native-worklets": "0.7.2",
+    65     "tailwind-merge": "^3.5.0",
+    66     "tailwindcss-animate": "^1.0.7"
+    67   },
+    68   "devDependencies": {
+    69     "@biomejs/biome": "2.4.5",
+    70     "@expo/metro-runtime": "55.0.11",
+    71     "@types/react": "~19.2.14",
+    72     "babel-preset-expo": "55.0.6",
+    73     "eslint-plugin-expo": "^1.0.0",
+    74     "oxlint": "^1.60.0",
+    75     "prettier-plugin-tailwindcss": "^0.5.11",
+    76     "tailwindcss": "^3.4.17",
+    77     "typescript": "~5.9.2"
+    78   },
+    79   "private": true
+    80 }
+    81 
+
+
+</observation>
+<action>
+AgentThinkAction(thought='Now I have a full picture. This is a no-auth game app. I need to:\n\n1. Rewrite _layout.tsx to remove auth (SessionProvider, Stack.Protected) - just plain Stack + GestureHandlerRootView + PortalHost\n2. Remove (auth) directory usage\n3. Delete or simplify ctx.tsx usage\n4. Rewrite index.tsx as the main home/landing screen\n5. Rewrite (app)/home.tsx → this becomes the game screen (or redirect)\n\nArchitecture plan:\n- index.tsx: Landing screen that redirects to game or shows start screen\n- (app)/home.tsx: World map (main hub)\n- (app)/game.tsx: Main game play screen\n- (app)/collection.tsx: Collection Book\n- (app)/shop.tsx: Shop\n- (app)/settings.tsx: Settings\n- (app)/daily-rewards.tsx: Daily Rewards\n- (app)/evolution-tree.tsx: Evolution Tree\n- (app)/level-complete.tsx: Level Complete\n\nGame engine files:\n- src/lib/gameTypes.ts: Types\n- src/lib/gameData.ts: Dragon/egg data\n- src/lib/gameEngine.ts: Physics engine (JS-based, works on all platforms)\n- src/lib/gameStore.ts: Global game state (using useRef + context)\n\nGame components:\n- src/components/game/GameBoard.tsx: The playfield with wooden frame\n- src/components/game/DragonSprite.tsx: Dragon/egg rendering (emoji-based)\n- src/components/game/ParticleEffect.tsx: Merge particles\n- src/components/game/BoosterBar.tsx: Bottom buttons\n- src/components/game/ScorePanel.tsx: Score display\n- src/components/game/NextPreview.tsx: Next character\n\nThe physics will be:\n- Simple 2D physics: gravity, bounce, circle-circle collision\n- Objects are circles with radius proportional to their level\n- Game board is a box\n- Tick with requestAnimationFrame (works on web and native)\n- Objects rendered as Animated Views\n\nSince this is complex, let me think about the dragon levels:\nLevel 1: Green egg (tiny)\nLevel 2: Blue egg (small)\nLevel 3: Purple egg (medium)\nLevel 4: Red egg\nLevel 5: Golden egg (large)\nLevel 6: Green baby dragon (tiny)\nLevel 7: Blue baby dragon\nLevel 8: Purple baby dragon\nLevel 9: Red baby dragon\nLevel 10: Golden baby dragon\nLevel 11: Green teen dragon\n... etc.\n\nActually let me simplify to match the PRD:\n- 6 dragon types: Green, Blue, Purple, Red, Golden, Pink\n- Evolution: Egg → Baby Dragon → Teen Dragon → Adult Dragon → King Dragon → Legendary Dragon\n- Each level merges two of same level to get next level\n- Level 1-5 are eggs, Level 6-10 are baby dragons, etc.\n\nI\'ll use emoji art for visual representation:\n🥚 green egg → 🐣 → 🐲 etc.\n\nActually, I\'ll use text/emoji combinations in custom styled Views to create the dragon sprites. Let me design proper dragon representations using combinations of emoji and colored circles.\n\nFor the physics engine on React Native:\n- Use a game loop with setInterval or requestAnimationFrame\n- Track positions with useRef (not useState to avoid re-renders per frame)\n- Update React state every N frames for rendering\n- Circle objects: { id, x, y, vx, vy, radius, level, merging }\n- Collision detection: distance < r1 + r2\n- Merge: same level + not currently merging → create new object at midpoint at level+1\n\nGame board dimensions:\n- Screen width minus padding = about 360px on 390px device\n- Board height: about 500px\n- Objects drop from top center\n\nLet me now write all the code. I\'ll start with the core files in parallel.\n\nColor scheme for game:\n- Background: Deep purple/cosmic (#1A0A2E)\n- Game board frame: warm brown (#8B5E3C wooden)\n- Board interior: dark purple (#2D1B69)\n- Primary UI: vibrant purple (#7C3AED)\n- Score: golden yellow (#F59E0B)\n- Coins: gold (#FBBF24)\n- Gems: cyan (#22D3EE)\n\nDragon emoji mapping:\n1: 🥚 (green egg) - tiny, greenish\n2: 🪺 (blue egg) - \n3: 🐣 (purple egg) - hatching\n4: 🐉 small red\n5: 🦕 golden\n6: 🐲 green baby dragon\n7: 💙 blue dragon\n8: 💜 purple dragon\n9: ❤️ red dragon\n10: 💛 golden dragon\n11: 💗 pink dragon\n\nActually better to use custom styled circles with emoji faces. Let me use:\n- Colored circles (View with borderRadius: 50%) with emoji text inside\n- Different border styles/glow for different levels\n- Progressive size increase\n\nDragons array:\nconst DRAGON_LEVELS = [\n  { level: 1, name: \'Green Egg\', emoji: \'🥚\', color: \'#4ADE80\', bgColor: \'#166534\', size: 30 },\n  { level: 2, name: \'Blue Egg\', emoji: \'🔵\', color: \'#60A5FA\', bgColor: \'#1E3A8A\', size: 36 },\n  { level: 3, name: \'Purple Egg\', emoji: \'🟣\', color: \'#C084FC\', bgColor: \'#581C87\', size: 42 },\n  { level: 4, name: \'Red Egg\', emoji: \'🔴\', color: \'#F87171\', bgColor: \'#7F1D1D\', size: 48 },\n  { level: 5, name: \'Golden Egg\', emoji: \'🌟\', color: \'#FCD34D\', bgColor: \'#78350F\', size: 54 },\n  { level: 6, name: \'Pink Egg\', emoji: \'🩷\', color: \'#F9A8D4\', bgColor: \'#831843\', size: 60 },\n  { level: 7, name: \'Green Dragon\', emoji: \'🐲\', color: \'#4ADE80\', bgColor: \'#14532D\', size: 66 },\n  { level: 8, name: \'Blue Dragon\', emoji: \'🐉\', color: \'#60A5FA\', bgColor: \'#1E3A5F\', size: 72 },\n  { level: 9, name: \'Purple Dragon\', emoji: \'🦄\', color: \'#C084FC\', bgColor: \'#4C1D95\', size: 78 },\n  { level: 10, name: \'Red Dragon\', emoji: \'🔥\', color: \'#F87171\', bgColor: \'#7F1D1D\', size: 84 },\n  { level: 11, name: \'Golden Dragon\', emoji: \'⭐\', color: \'#FCD34D\', bgColor: \'#713F12\', size: 90 },\n];\n\nNow let me think about the physics implementation more carefully.\n\nThe key challenge: React Native doesn\'t have a built-in game loop. I need to:\n1. Use requestAnimationFrame (available in RN via the JS runtime)\n2. Store physics state in useRef to avoid re-renders\n3. Update display state (React setState) at 30fps while physics runs at 60fps\n\nPhysics algorithm:\n```\nfunction tick(dt):\n  for each object:\n    // Apply gravity\n    object.vy += GRAVITY * dt\n    \n    // Update position\n    object.x += object.vx * dt\n    object.y += object.vy * dt\n    \n    // Boundary collisions (left, right, bottom)\n    if object.x - object.radius < 0:\n      object.x = object.radius\n      object.vx = -object.vx * DAMPING\n    if object.x + object.radius > BOARD_WIDTH:\n      object.x = BOARD_WIDTH - object.radius\n      object.vx = -object.vx * DAMPING\n    if object.y + object.radius > BOARD_HEIGHT:\n      object.y = BOARD_HEIGHT - object.radius\n      object.vy = -object.vy * DAMPING\n      object.vx *= FRICTION  // friction on floor\n    \n  // Object-object collisions\n  for each pair (a, b):\n    dx = b.x - a.x\n    dy = b.y - a.y\n    dist = sqrt(dx*dx + dy*dy)\n    minDist = a.radius + b.radius\n    if dist < minDist and dist > 0:\n      // Separate\n      overlap = minDist - dist\n      nx = dx/dist\n      ny = dy/dist\n      a.x -= nx * overlap/2\n      a.y -= ny * overlap/2\n      b.x += nx * overlap/2\n      b.y += ny * overlap/2\n      \n      // Velocity exchange\n      dvx = a.vx - b.vx\n      dvy = a.vy - b.vy\n      dot = dvx*nx + dvy*ny\n      if dot < 0:\n        impulse = (1+RESTITUTION) * dot / 2\n        a.vx -= impulse * nx\n        a.vy -= impulse * ny\n        b.vx += impulse * nx\n        b.vy += impulse * ny\n      \n      // Check merge condition\n      if a.level == b.level and not a.merging and not b.merging:\n        markForMerge(a, b)\n```\n\nThis is the core physics. Let me now write all the code.\n\nFor the UI, since this is a "Minimal" aesthetic template but the game itself should look premium/colorful (it\'s a fantasy game), I\'ll apply the Minimal template principles to the non-game-board UI elements (menus, modals, overlays) while keeping the game board colorful and vibrant.\n\nActually for a game, the "Minimal" template really just means clean typography and layout. The game itself should be colorful - that\'s the product requirement.\n\nLet me now write all files in batch.', action=<ActionType.THINK: 'think'>)
+</action>
+<observation>
+AgentThinkObservation(content='Your thought has been logged.', observation=<ObservationType.THINK: 'think'>)
+</observation>
+<action>
+**FileEditAction**
+Path: [/workspace/app-cuhcy5wjz3lt/app.json]
+Thought: Now let me build everything in parallel. Starting with all the core files:
+Command: str_replace
+Old String: ```
+    "name": "expo-template",
+    "slug": "expo-template",
+```
+New String: ```
+    "name": "Dragon Merge Kingdom",
+    "slug": "dragon-merge-kingdom",
+```
+
+</action>
+<observation>
+The file /workspace/app-cuhcy5wjz3lt/app.json has been edited.
+
+</observation>
+<action>
+**FileEditAction**
+Path: [/workspace/app-cuhcy5wjz3lt/src/global.css]
+Thought: 
+Command: str_replace
+Old String: ```
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 3.9%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 0% 83.1%;
+  }
+}
+```
+New String: ```
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 270 60% 8%;
+    --foreground: 0 0% 98%;
+    --card: 270 50% 14%;
+    --card-foreground: 0 0% 98%;
+    --popover: 270 50% 14%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 262 83% 58%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 270 40% 22%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 270 30% 18%;
+    --muted-foreground: 270 20% 65%;
+    --accent: 45 96% 53%;
+    --accent-foreground: 270 60% 8%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 270 30% 25%;
+    --input: 270 30% 20%;
+    --ring: 262 83% 58%;
+    --radius: 1rem;
+  }
+}
+```
+
+</action>
+<observation>
+The file /workspace/app-cuhcy5wjz3lt/src/global.css has been edited.
+
+</observation>
+<action>
+**FileEditAction**
+Path: [/workspace/app-cuhcy5wjz3lt/src/app/_layout.tsx]
+Thought: 
+Command: str_replace
+Old String: ```
+import * as Sentry from '@sentry/react-native';
+import { Stack } from 'expo-router';
+import { PortalHost } from '@rn-primitives/portal';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+
+import { SessionProvider, useSession } from '@/ctx';
+import "../global.css";
+
+Sentry.init({
+  dsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
+});
+
+function RootLayoutNav() {
+  const { session, isLoading } = useSession();
+
+  if (isLoading) return null;
+
+  return (
+    <Stack screenOptions={{ headerShown: false }}>
+      {/* 公开路由：无需登录即可访问 */}
+      <Stack.Protected guard={!session}>
+        <Stack.Screen name="index" />
+        <Stack.Screen name="(auth)" />
+      </Stack.Protected>
+      {/* 受保护路由：guard=false 时路由从路由表移除，自动回落至最近可用路由 */}
+      <Stack.Protected guard={!!session}>
+        <Stack.Screen name="(app)" />
+      </Stack.Protected>
+    </Stack>
+  );
+}
+
+const RootLayout: React.FC = () => {
+  return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SessionProvider>
+        <RootLayoutNav />
+        <PortalHost />
+      </SessionProvider>
+    </GestureHandlerRootView>
+  );
+};
+
+export default Sentry.wrap(RootLayout);
+```
+New String: ```
+import { Stack } from 'expo-router';
+import { PortalHost } from '@rn-primitives/portal';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import "../global.css";
+
+export default function RootLayout() {
+  return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <Stack screenOptions={{ headerShown: false }} />
+      <PortalHost />
+    </GestureHandlerRootView>
+  );
+}
+```
+
+</action>
+<observation>
+The file /workspace/app-cuhcy5wjz3lt/src/app/_layout.tsx has been edited.
+
+</observation>
