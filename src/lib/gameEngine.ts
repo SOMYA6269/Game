@@ -1,5 +1,5 @@
-// Physics engine for Dragon Merge Kingdom — Production Rework
-// Pure JS, works on iOS, Android, and Web
+// Physics engine for Dragon Merge Kingdom — Production Rework v2
+// Optimised for 60 FPS: in-place mutation, minimal allocations, better physics
 
 import type {
   PhysicsObject, GameState, Particle, MergeEffect,
@@ -10,12 +10,16 @@ import {
   LEVEL_TARGETS, getComboLabel,
 } from './gameData';
 
-const GRAVITY = 1400;      // px/s²  (snappier feel)
-const DAMPING = 0.50;      // velocity damping on wall bounce
-const FRICTION = 0.88;     // floor friction
-const RESTITUTION = 0.35;  // bounciness
-const MAX_VY = 1000;       // terminal velocity
-const DANGER_Y_RATIO = 0.15; // danger line at 15% from top of board
+const GRAVITY      = 1500;   // px/s² — satisfying weight
+const WALL_DAMPING = 0.45;   // lateral energy loss on wall
+const FLOOR_BOUNCE = 0.28;   // vertical restitution on floor
+const FLOOR_FRIC   = 0.82;   // horizontal friction on floor per frame
+const OBJECT_RESTITUTION = 0.30; // energy kept after object–object collision
+const MAX_VY       = 1200;   // terminal velocity
+const DANGER_Y_RATIO = 0.15;
+
+// Per-level mass (heavier dragons resist being pushed further)
+const LEVEL_MASS = [1, 1.2, 1.4, 1.7, 2.0, 2.4, 2.9, 3.5, 4.2, 5.0, 6.0];
 
 let _idCounter = 0;
 const genId = () => `obj_${++_idCounter}_${Date.now()}`;
@@ -38,77 +42,142 @@ export function tickPhysics(
   boardHeight: number,
 ): { newObjects: PhysicsObject[]; merges: Array<{ a: PhysicsObject; b: PhysicsObject }> } {
   const frozen = state.freezeTimer > 0;
-  const objects = state.objects.map(o => ({ ...o }));
+  // Clone shallowly once — avoid per-object spreading inside loop
+  const objects: PhysicsObject[] = state.objects.map(o => ({
+    id: o.id, x: o.x, y: o.y, vx: o.vx, vy: o.vy,
+    radius: o.radius, level: o.level,
+    merging: o.merging, settled: o.settled,
+    opacity: o.opacity, scale: o.scale,
+    isBomb: o.isBomb, isSpecial: o.isSpecial,
+  }));
   const merges: Array<{ a: PhysicsObject; b: PhysicsObject }> = [];
-  const clampedDt = Math.min(dt, 0.05);
+  const cdt = Math.min(dt, 0.033); // cap sub-step at 33ms
 
   if (!frozen) {
-    for (const obj of objects) {
+    for (let i = 0; i < objects.length; i++) {
+      const obj = objects[i];
       if (obj.merging) continue;
-      obj.vy = Math.min(obj.vy + GRAVITY * clampedDt, MAX_VY);
-      obj.x += obj.vx * clampedDt;
-      obj.y += obj.vy * clampedDt;
+      const mass = LEVEL_MASS[Math.min(obj.level - 1, LEVEL_MASS.length - 1)];
 
-      if (obj.opacity < 1) obj.opacity = Math.min(obj.opacity + clampedDt * 8, 1);
+      // Gravity (lighter dragons accelerate faster → more natural)
+      obj.vy = Math.min(obj.vy + (GRAVITY / mass * 0.6 + GRAVITY * 0.4) * cdt, MAX_VY);
+      obj.x += obj.vx * cdt;
+      obj.y += obj.vy * cdt;
+
+      // Fade in on spawn
+      if (obj.opacity < 1) obj.opacity = Math.min(obj.opacity + cdt * 10, 1);
+      // Squash/stretch settle
       if (obj.scale !== 1) {
-        obj.scale += (1 - obj.scale) * clampedDt * 14;
-        if (Math.abs(obj.scale - 1) < 0.01) obj.scale = 1;
+        obj.scale += (1 - obj.scale) * cdt * 16;
+        if (Math.abs(obj.scale - 1) < 0.005) obj.scale = 1;
       }
 
-      if (obj.x - obj.radius < 0) { obj.x = obj.radius; obj.vx = Math.abs(obj.vx) * DAMPING; obj.scale = 0.85; }
-      if (obj.x + obj.radius > boardWidth) { obj.x = boardWidth - obj.radius; obj.vx = -Math.abs(obj.vx) * DAMPING; obj.scale = 0.85; }
+      // Left / right walls
+      if (obj.x - obj.radius < 0) {
+        obj.x = obj.radius;
+        obj.vx = Math.abs(obj.vx) * WALL_DAMPING;
+        obj.scale = 0.88;
+      }
+      if (obj.x + obj.radius > boardWidth) {
+        obj.x = boardWidth - obj.radius;
+        obj.vx = -Math.abs(obj.vx) * WALL_DAMPING;
+        obj.scale = 0.88;
+      }
+
+      // Floor
       if (obj.y + obj.radius >= boardHeight) {
         obj.y = boardHeight - obj.radius;
-        const speed = Math.abs(obj.vy);
-        obj.vy = -speed * DAMPING;
-        obj.vx *= FRICTION;
-        if (speed < 40) { obj.vy = 0; obj.settled = true; } else { obj.scale = 0.82; obj.settled = false; }
+        const spd = Math.abs(obj.vy);
+        obj.vy = -spd * FLOOR_BOUNCE;
+        obj.vx *= FLOOR_FRIC;
+        if (spd < 60) {
+          obj.vy = 0;
+          obj.settled = true;
+        } else {
+          // squash on strong impact, stretch on gentle
+          obj.scale = spd > 300 ? 0.75 : 0.88;
+          obj.settled = false;
+        }
       }
     }
   } else {
-    // Still fade in + scale settle while frozen
-    for (const obj of objects) {
-      if (obj.opacity < 1) obj.opacity = Math.min(obj.opacity + clampedDt * 8, 1);
+    for (let i = 0; i < objects.length; i++) {
+      const obj = objects[i];
+      if (obj.opacity < 1) obj.opacity = Math.min(obj.opacity + cdt * 10, 1);
       if (obj.scale !== 1) {
-        obj.scale += (1 - obj.scale) * clampedDt * 14;
-        if (Math.abs(obj.scale - 1) < 0.01) obj.scale = 1;
+        obj.scale += (1 - obj.scale) * cdt * 16;
+        if (Math.abs(obj.scale - 1) < 0.005) obj.scale = 1;
       }
     }
   }
 
-  // Collision resolution (3 passes)
-  for (let pass = 0; pass < 3; pass++) {
+  // ── Object–object collision resolution (4 passes for accuracy) ─────────
+  const mergedSet = new Set<string>();
+  for (let pass = 0; pass < 4; pass++) {
     for (let i = 0; i < objects.length; i++) {
       for (let j = i + 1; j < objects.length; j++) {
         const a = objects[i]; const b = objects[j];
         if (a.merging || b.merging) continue;
-        const dx = b.x - a.x; const dy = b.y - a.y;
+
+        const dx = b.x - a.x;
+        const dy = b.y - a.y;
         const distSq = dx * dx + dy * dy;
         const minDist = a.radius + b.radius;
-        if (distSq < minDist * minDist && distSq > 0.001) {
-          const dist = Math.sqrt(distSq);
-          const nx = dx / dist; const ny = dy / dist;
-          const overlap = minDist - dist;
-          a.x -= nx * overlap * 0.5; a.y -= ny * overlap * 0.5;
-          b.x += nx * overlap * 0.5; b.y += ny * overlap * 0.5;
-          if (!frozen) {
-            const dvx = a.vx - b.vx; const dvy = a.vy - b.vy;
-            const dot = dvx * nx + dvy * ny;
-            if (dot > 0) {
-              const impulse = (1 + RESTITUTION) * dot * 0.5;
-              a.vx -= impulse * nx; a.vy -= impulse * ny;
-              b.vx += impulse * nx; b.vy += impulse * ny;
-              a.scale = 0.87; b.scale = 0.87;
-            }
+        if (distSq >= minDist * minDist || distSq < 0.001) continue;
+
+        const dist = Math.sqrt(distSq);
+        const nx = dx / dist;
+        const ny = dy / dist;
+        const overlap = minDist - dist;
+
+        // Mass-weighted position correction
+        const massA = LEVEL_MASS[Math.min(a.level - 1, LEVEL_MASS.length - 1)];
+        const massB = LEVEL_MASS[Math.min(b.level - 1, LEVEL_MASS.length - 1)];
+        const totalMass = massA + massB;
+        const pushA = overlap * (massB / totalMass);
+        const pushB = overlap * (massA / totalMass);
+        a.x -= nx * pushA; a.y -= ny * pushA;
+        b.x += nx * pushB; b.y += ny * pushB;
+
+        if (!frozen) {
+          const dvx = a.vx - b.vx;
+          const dvy = a.vy - b.vy;
+          const dot = dvx * nx + dvy * ny;
+          if (dot > 0) {
+            const impulse = (1 + OBJECT_RESTITUTION) * dot / totalMass;
+            a.vx -= impulse * nx * massB;
+            a.vy -= impulse * ny * massB;
+            b.vx += impulse * nx * massA;
+            b.vy += impulse * ny * massA;
+            a.scale = 0.88; b.scale = 0.88;
+            a.settled = false; b.settled = false;
           }
-          if (pass === 0 && a.level === b.level && a.level < MAX_DRAGON_LEVEL && !a.isBomb && !b.isBomb) {
-            merges.push({ a, b }); a.merging = true; b.merging = true;
-          }
+        }
+
+        // Queue merge (first pass only, each object once)
+        if (pass === 0
+          && a.level === b.level
+          && a.level < MAX_DRAGON_LEVEL
+          && !a.isBomb && !b.isBomb
+          && !mergedSet.has(a.id) && !mergedSet.has(b.id)
+        ) {
+          merges.push({ a, b });
+          a.merging = true; b.merging = true;
+          mergedSet.add(a.id); mergedSet.add(b.id);
         }
       }
     }
   }
   return { newObjects: objects, merges };
+}
+
+// Shockwave ring data embedded in MergeEffect
+export interface ShockwaveRing {
+  id: string;
+  x: number;
+  y: number;
+  color: string;
+  createdAt: number;
 }
 
 export function applyMerges(
@@ -120,15 +189,15 @@ export function applyMerges(
 ): {
   updatedObjects: PhysicsObject[];
   effects: MergeEffect[];
+  shockwaves: ShockwaveRing[];
   newParticles: Particle[];
   scoreGained: number;
-  newComboLabels: ComboLabel[];
 } {
   const mergingIds = new Set(merges.flatMap(m => [m.a.id, m.b.id]));
   const remaining = objects.filter(o => !mergingIds.has(o.id));
   const effects: MergeEffect[] = [];
+  const shockwaves: ShockwaveRing[] = [];
   const newParticles: Particle[] = [];
-  const newComboLabels: ComboLabel[] = [];
   let scoreGained = 0;
 
   const BURST_COLORS = ['#FCD34D', '#F9A8D4', '#60A5FA', '#4ADE80', '#C084FC', '#F87171', '#34D399', '#FB923C'];
@@ -138,11 +207,12 @@ export function applyMerges(
     const mx = (a.x + b.x) / 2;
     const my = (a.y + b.y) / 2;
     const def = getDragonDef(newLevel);
-    const clampedX = Math.max(def.radius, Math.min(boardWidth - def.radius, mx));
-    const clampedY = Math.max(def.radius, Math.min(boardHeight - def.radius, my));
+    const cx = Math.max(def.radius, Math.min(boardWidth - def.radius, mx));
+    const cy = Math.max(def.radius, Math.min(boardHeight - def.radius, my));
 
-    const merged = createObject(clampedX, clampedY, newLevel);
-    merged.scale = 1.35;
+    const merged = createObject(cx, cy, newLevel);
+    merged.scale = 1.4; // big pop
+    merged.opacity = 1;
     remaining.push(merged);
 
     const gained = def.score * scoreMultiplier;
@@ -150,29 +220,46 @@ export function applyMerges(
 
     effects.push({ id: genId(), x: mx, y: my, level: newLevel, createdAt: Date.now(), scoreText: `+${gained}` });
 
-    // Big burst — 16 particles
-    for (let k = 0; k < 16; k++) {
-      const angle = (k / 16) * Math.PI * 2 + Math.random() * 0.3;
-      const speed = 100 + Math.random() * 160;
+    // Shockwave ring
+    shockwaves.push({ id: genId(), x: mx, y: my, color: def.glowColor, createdAt: Date.now() });
+
+    // Particle burst — 20 particles (mix circles + coins)
+    for (let k = 0; k < 20; k++) {
+      const angle = (k / 20) * Math.PI * 2 + Math.random() * 0.4;
+      const speed = 120 + Math.random() * 180;
       newParticles.push({
         id: genId(), x: mx, y: my,
         vx: Math.cos(angle) * speed,
-        vy: Math.sin(angle) * speed - 80,
-        color: BURST_COLORS[k % BURST_COLORS.length],
-        size: 5 + Math.random() * 7,
+        vy: Math.sin(angle) * speed - 100,
+        color: k < 6 ? '#FCD34D' : BURST_COLORS[k % BURST_COLORS.length],
+        size: k < 6 ? 8 : 5 + Math.random() * 6,
         life: 1,
-        shape: Math.random() > 0.5 ? 'star' : 'circle',
+        shape: k < 6 ? 'star' : 'circle',
       });
     }
   }
 
-  return { updatedObjects: remaining, effects, newParticles, scoreGained, newComboLabels };
+  return { updatedObjects: remaining, effects, shockwaves, newParticles, scoreGained };
 }
 
 export function tickParticles(particles: Particle[], dt: number): Particle[] {
-  return particles
-    .map(p => ({ ...p, x: p.x + p.vx * dt, y: p.y + p.vy * dt, vy: p.vy + 240 * dt, life: p.life - dt * 2.2 }))
-    .filter(p => p.life > 0);
+  const result: Particle[] = [];
+  for (const p of particles) {
+    const life = p.life - dt * 2.0;
+    if (life <= 0) continue;
+    result.push({
+      id: p.id,
+      x: p.x + p.vx * dt,
+      y: p.y + p.vy * dt,
+      vx: p.vx * 0.97,
+      vy: p.vy + 260 * dt,
+      color: p.color,
+      size: p.size,
+      life,
+      shape: p.shape,
+    });
+  }
+  return result;
 }
 
 export function spawnBombObject(boardWidth: number, warning: BombWarning): PhysicsObject {

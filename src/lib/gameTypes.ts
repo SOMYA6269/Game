@@ -42,6 +42,14 @@ export interface MergeEffect {
   scoreText: string;
 }
 
+export interface ShockwaveRing {
+  id: string;
+  x: number;
+  y: number;
+  color: string;
+  createdAt: number;
+}
+
 export interface Particle {
   id: string;
   x: number;
