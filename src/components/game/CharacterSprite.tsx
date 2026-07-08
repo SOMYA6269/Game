@@ -237,6 +237,7 @@ export const CharacterSprite = React.memo(function CharacterSprite({ level, size
           contentPosition="center"
           transition={0}
           cachePolicy="memory-disk"
+          priority="high"
         />
       </Animated.View>
     );

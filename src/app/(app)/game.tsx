@@ -84,32 +84,8 @@ const DustParticle = memo(function DustParticle({ boardW, boardH, idx }: { board
   );
 });
 
-// ─────────────────────────────────────────────────────────────────────────────
-// SQUASH-BOUNCE — plays once when a character first lands
-// ─────────────────────────────────────────────────────────────────────────────
-const BounceSprite = memo(function BounceSprite({ level, size }: { level: number; size: number }) {
-  const scX = useRef(new Animated.Value(1)).current;
-  const scY = useRef(new Animated.Value(1)).current;
-  useEffect(() => {
-    Animated.sequence([
-      // squash on impact
-      Animated.parallel([
-        Animated.timing(scX, { toValue: 1.28, duration: 75, useNativeDriver: true }),
-        Animated.timing(scY, { toValue: 0.78, duration: 75, useNativeDriver: true }),
-      ]),
-      // spring back
-      Animated.parallel([
-        Animated.spring(scX, { toValue: 1, friction: 4, tension: 180, useNativeDriver: true }),
-        Animated.spring(scY, { toValue: 1, friction: 4, tension: 180, useNativeDriver: true }),
-      ]),
-    ]).start();
-  }, []);
-  return (
-    <Animated.View style={{ width: size, height: size, transform: [{ scaleX: scX }, { scaleY: scY }] }}>
-      <CharacterSprite level={level} size={size} animate={false} />
-    </Animated.View>
-  );
-});
+// BounceSprite removed — squash animation caused unwanted bouncing on every physics tick.
+// Characters render as plain sprites; no scale distortion during fall.
 
 // ─────────────────────────────────────────────────────────────────────────────
 // SOFT CONTACT SHADOW — layered translucent ellipses, no hard edge
@@ -653,6 +629,19 @@ export default function GameScreen() {
   const xpPct = Math.min(100, Math.max(0, ((score - prevTarget) / Math.max(1, levelTarget - prevTarget)) * 100));
   const isDanger = physState.dangerTimer > 0;
 
+  // Prefetch all dragon PNG assets on mount so they're in memory cache before first spawn
+  useEffect(() => {
+    import('expo-image').then(({ Image: Img }) => {
+      [
+        require('../../../assets/dragon_red.png'),
+        require('../../../assets/dragon_blue.png'),
+        require('../../../assets/dragon_purple.png'),
+        require('../../../assets/dragon_gold.png'),
+        require('../../../assets/egg_common.png'),
+      ].forEach((src) => Img.prefetch(src));
+    });
+  }, []);
+
   // Physics loop
   useEffect(() => {
     if (phase !== 'playing') { if (raf.current) clearInterval(raf.current); return; }
@@ -847,7 +836,7 @@ export default function GameScreen() {
                 }}>
                   {/* Soft layered contact shadow — NO hard black */}
                   <ContactShadow sz={sz} />
-                  <BounceSprite level={c.level} size={sz} />
+                  <CharacterSprite level={c.level} size={sz} animate={false} />
                 </View>
               );
             })}
