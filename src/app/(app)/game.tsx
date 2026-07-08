@@ -10,19 +10,18 @@ import {
   useWindowDimensions, PanResponder, ImageBackground,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Image as ExpoImage } from 'expo-image';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import Svg, {
-  Path, Circle, Ellipse, G, Polygon, Defs,
-  RadialGradient, LinearGradient as SvgLG, Stop, Rect, Line,
+  Path, Circle, G, Polygon, Defs,
+  RadialGradient, Stop, Rect, Line,
 } from 'react-native-svg';
 
 import { CharacterSprite, getCharacterDef } from '../../components/game/CharacterSprite';
 import {
   createPhysicsState, dropAnimal, tickPhysics,
-  resetPhysics, getLevelTarget, applyUndo,
+  resetPhysics, getLevelTarget,
 } from '../../lib/physicsEngine';
 import type { PhysicsState, PhysicsCircle } from '../../lib/physicsEngine';
 
@@ -45,14 +44,7 @@ const OAK = {
 // ─────────────────────────────────────────────────────────────────────────────
 // PRELOAD ALL PNG ASSETS AT MODULE LEVEL (runs once, before any render)
 // ─────────────────────────────────────────────────────────────────────────────
-const DRAGON_SOURCES = [
-  require('../../../assets/dragon_red.png'),
-  require('../../../assets/dragon_blue.png'),
-  require('../../../assets/dragon_purple.png'),
-  require('../../../assets/dragon_gold.png'),
-  require('../../../assets/egg_common.png'),
-];
-DRAGON_SOURCES.forEach((s) => ExpoImage.prefetch(s as string));
+// Dragon asset references (prefetched inside component)
 
 // ─────────────────────────────────────────────────────────────────────────────
 // GOLDEN DUST PARTICLES — gentle upward drift
@@ -185,7 +177,7 @@ function EncouragePop({ msg, onDone }: { msg: string; onDone: () => void }) {
   }, []);
   return (
     <Animated.Text style={{
-      position: 'absolute', alignSelf: 'center', top: '32%', pointerEvents: 'none',
+      position: 'absolute', alignSelf: 'center', top: 80, pointerEvents: 'none',
       color: '#FFFDE7', fontWeight: '900', fontSize: 28,
       textShadowColor: '#E65100', textShadowOffset: { width: 0, height: 3 }, textShadowRadius: 16,
       opacity: op, transform: [{ scale: sc }],
@@ -296,28 +288,28 @@ function DangerLine({ w, active }: { w: number; active: boolean }) {
 // XP BAR — golden frame, glossy green fill, animated shine
 // ─────────────────────────────────────────────────────────────────────────────
 function XpBar({ pct }: { pct: number }) {
-  const shine = useRef(new Animated.Value(-1)).current;
+  const [trackW, setTrackW] = useState(200);
+  const shine = useRef(new Animated.Value(0)).current;
   useEffect(() => {
     Animated.loop(
-      Animated.timing(shine, { toValue: 1.5, duration: 2200, useNativeDriver: true })
+      Animated.timing(shine, { toValue: 1, duration: 2200, useNativeDriver: true })
     ).start();
   }, []);
-  const w = `${Math.max(2, pct)}%` as const;
+  const shineX = shine.interpolate({
+    inputRange: [0, 1],
+    outputRange: [-trackW * 0.5, trackW * 1.2],
+  });
+  const fillW = Math.max(2, (pct / 100) * trackW);
   return (
     <View style={styles.xpOuter}>
-      {/* Gold frame border */}
       <View style={styles.xpFrame}>
-        <View style={styles.xpTrack}>
-          {/* Green fill */}
+        <View style={styles.xpTrack} onLayout={(e) => setTrackW(e.nativeEvent.layout.width)}>
           <LinearGradient
             colors={['#76FF03', '#33A800', '#1B5E20']}
-            style={[styles.xpFill, { width: w }]}
+            style={[styles.xpFill, { width: fillW }]}
             start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
           />
-          {/* Animated shine sweep */}
-          <Animated.View style={[styles.xpShine, {
-            transform: [{ translateX: shine.interpolate({ inputRange: [-1, 1.5], outputRange: ['-120%', '220%'] }) }],
-          }]} />
+          <Animated.View style={[styles.xpShine, { transform: [{ translateX: shineX }] }]} />
         </View>
       </View>
       <Text style={styles.xpPct}>{Math.round(pct)}%</Text>
@@ -920,7 +912,7 @@ const styles = StyleSheet.create({
                 shadowColor: '#FFD700', shadowOpacity: 0.3, shadowRadius: 4, shadowOffset: { width: 0, height: 1 } },
   xpTrack:    { height: 9, backgroundColor: 'rgba(0,0,0,0.40)', borderRadius: 5, overflow: 'hidden', position: 'relative' },
   xpFill:     { height: 9, borderRadius: 5 },
-  xpShine:    { position: 'absolute', top: 0, bottom: 0, width: '40%',
+  xpShine:    { position: 'absolute', top: 0, bottom: 0, width: 60,
                 backgroundColor: 'rgba(255,255,255,0.30)', borderRadius: 5 },
   xpPct:      { color: 'rgba(255,230,100,0.7)', fontSize: 9, fontWeight: '800', minWidth: 28, textAlign: 'right' },
 
