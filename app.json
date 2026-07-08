@@ -2,7 +2,7 @@
   "expo": {
     "name": "GitHub游戏项目导入",
     "slug": "dragon-merge-kingdom",
-    "version": "1.0.41",
+    "version": "1.0.42",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
