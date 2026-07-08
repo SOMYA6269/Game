@@ -15,7 +15,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import Svg, {
   Path, Circle, G, Polygon, Defs,
-  RadialGradient, Stop, Rect, Line,
+  RadialGradient, LinearGradient as SvgLinearGradient, Stop, Rect, Line,
 } from 'react-native-svg';
 
 import { CharacterSprite, getCharacterDef } from '../../components/game/CharacterSprite';
@@ -341,16 +341,16 @@ function WoodFrame({ w, h }: { w: number; h: number }) {
     <Svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} style={StyleSheet.absoluteFillObject} pointerEvents="none">
       <Defs>
         {/* Warm oak gradient */}
-        <LinearGradient id="oakH" x1="0" y1="0" x2="0" y2="1">
+        <SvgLinearGradient id="oakH" x1="0" y1="0" x2="0" y2="1">
           <Stop offset="0%" stopColor={OAK.light} />
           <Stop offset="45%" stopColor={OAK.mid} />
           <Stop offset="100%" stopColor={OAK.dark} />
-        </LinearGradient>
-        <LinearGradient id="oakV" x1="0" y1="0" x2="1" y2="0">
+        </SvgLinearGradient>
+        <SvgLinearGradient id="oakV" x1="0" y1="0" x2="1" y2="0">
           <Stop offset="0%" stopColor={OAK.dark} />
           <Stop offset="50%" stopColor={OAK.mid} />
           <Stop offset="100%" stopColor={OAK.dark} />
-        </LinearGradient>
+        </SvgLinearGradient>
         {/* Bolt gradient */}
         <RadialGradient id="bolt" cx="38%" cy="30%" r="65%">
           <Stop offset="0%" stopColor="#FFF9C4" />
@@ -358,11 +358,11 @@ function WoodFrame({ w, h }: { w: number; h: number }) {
           <Stop offset="100%" stopColor="#8B6914" />
         </RadialGradient>
         {/* Varnish gloss */}
-        <LinearGradient id="varnish" x1="0" y1="0" x2="0" y2="1">
+        <SvgLinearGradient id="varnish" x1="0" y1="0" x2="0" y2="1">
           <Stop offset="0%" stopColor="rgba(255,255,255,0.32)" />
           <Stop offset="60%" stopColor="rgba(255,255,255,0.04)" />
           <Stop offset="100%" stopColor="rgba(0,0,0,0.12)" />
-        </LinearGradient>
+        </SvgLinearGradient>
       </Defs>
 
       {/* ── FRAME RAILS ── */}
